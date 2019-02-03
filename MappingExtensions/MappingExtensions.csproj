@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MappingExtensions</RootNamespace>
-    <AssemblyName>NewPlugin</AssemblyName>
+    <AssemblyName>MappingExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -33,6 +33,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -44,6 +47,9 @@
     </Reference>
     <Reference Include="IllusionPlugin">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\IllusionPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="SongLoaderPlugin">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Beat Saber\Plugins\SongLoaderPlugin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,9 +80,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HarmonyPatches\BeatDataMirrorTranformCreateTransformedData.cs" />
+    <Compile Include="HarmonyPatches\BeatmapDataClearNotesBeforeStartTimeTransformCreateTransformedData.cs" />
+    <Compile Include="HarmonyPatches\BeatmapDataObstaclesAndBombsTransformCreateTransformedData.cs" />
+    <Compile Include="HarmonyPatches\BeatmapObjectDataMirrorLineIndex.cs" />
+    <Compile Include="HarmonyPatches\BeatmapObjectSpawnControllerGetNoteOffset.cs" />
+    <Compile Include="HarmonyPatches\BeatmapObjectSpawnControllerHighestJumpPosYForLineLayer.cs" />
+    <Compile Include="HarmonyPatches\BeatmapObjectSpawnControllerLineYPosForLineLayer.cs" />
+    <Compile Include="HarmonyPatches\ColorNoteVisualsHandleNoteControllerDidInitEvent.cs" />
+    <Compile Include="HarmonyPatches\FlyingScoreSpawnerSpawnFlyingScore.cs" />
+    <Compile Include="HarmonyPatches\GameNoteControllerHandleCut.cs" />
+    <Compile Include="HarmonyPatches\NoteCuDirectionExtensionsRotation.cs" />
+    <Compile Include="HarmonyPatches\NoteDataMirrorLineIndex.cs" />
+    <Compile Include="HarmonyPatches\NoteDataMirrorTransformCutDirection.cs" />
+    <Compile Include="HarmonyPatches\ObstacleDataMirrorLineIndex.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\BasicUI.cs" />
+    <Compile Include="ReflectionUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

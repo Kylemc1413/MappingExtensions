@@ -8,53 +8,41 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using IllusionPlugin;
-
+using Harmony;
 
 namespace MappingExtensions
 {
     public class Plugin : IPlugin
     {
-        public string Name => "Plugin Name";
-        public string Version => "0.0.1";
-
+        public string Name => "Mapping Extensions";
+        public string Version => "1.0.0";
+        public static HarmonyInstance harmony;
         bool doesPluginExist;
 
         public void OnApplicationStart()
         {
             SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Precision Placement");
+            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Extra Note Angles");
+            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-More Lanes");
+            harmony = HarmonyInstance.Create("com.kyle1413.BeatSaber.MappingExtensions");
+            ApplyPatches();
 
-            //Checks if a IPlugin with the name in quotes exists, in case you want to verify a plugin exists before trying to reference it, or change how you do things based on if a plugin is present
-            doesPluginExist = IllusionInjector.PluginManager.Plugins.Any(x => x.Name == "Saber Mod");
-
-
+            
         }
 
         private void SceneManagerOnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
 
-            if (newScene.name == "Menu")
-            {
-                //Code to execute when entering The Menu
 
-
-            }
-
-            if (newScene.name == "GameCore")
-            {
-                //Code to execute when entering actual gameplay
-
-
-            }
 
 
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode arg1)
         {
-            //Create GameplayOptions/SettingsUI if using either
-            if (scene.name == "Menu")
-                UI.BasicUI.CreateUI();
+      
 
         }
 
@@ -76,6 +64,22 @@ namespace MappingExtensions
         public void OnUpdate()
         {
 
+
+        }
+
+        public static void ApplyPatches()
+        {
+
+            try
+            {
+
+                harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
+
+            }
+            catch (Exception ex)
+            {
+
+            }
 
         }
 
