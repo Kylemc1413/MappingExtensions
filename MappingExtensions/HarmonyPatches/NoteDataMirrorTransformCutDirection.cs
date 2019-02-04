@@ -19,7 +19,8 @@ new Type[] {
             {
                 int cutdir = (int)__instance.cutDirection;
                 int angle =  1000 - cutdir;
-                angle = angle > 180 ? 360 - angle : 180 - angle;
+
+                angle = angle > 180 ? ((angle - 360) * -1) : 360 - angle;
 
                 int newdir = angle + 1000;
 
