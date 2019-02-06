@@ -18,7 +18,7 @@ new Type[] {
             if ((int)__instance.cutDirection >= 1000)
             {
                 int cutdir = (int)__instance.cutDirection;
-                int angle =  1000 - cutdir;
+                int angle =  cutdir - 1000;
 
                 angle = angle > 180 ? ((angle - 360) * -1) : 360 - angle;
 
