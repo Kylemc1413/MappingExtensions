@@ -21,11 +21,18 @@ new Type[] {
                 {
                     int newIndex = __instance.lineIndex;
 
+                    bool leftSide = false;
                     if (newIndex <= -1000)
+                    {
+                        leftSide = true;
+                    }
+
+
+                    if (leftSide)
                         newIndex += 2000;
 
-                    newIndex = 5001 - __instance.width - newIndex;
-                    if (newIndex <= 1000)
+                    newIndex = 5000 - __instance.width - newIndex;
+                    if (!leftSide)
                         newIndex -= 2000;
 
                     __instance.SetProperty("lineIndex", newIndex);
