@@ -20,25 +20,22 @@ new Type[] {
                 if (__instance.lineIndex >= 1000 || __instance.lineIndex <= -1000)
                 {
                     int newIndex = __instance.lineIndex;
-
+                    Console.WriteLine("Initial: " + newIndex);
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
-                        leftSide = true;
-                    }
-
-
-                    if (leftSide)
                         newIndex += 2000;
-
+                    }
+                    if (newIndex >= 4000)
+                        leftSide = true;
                     newIndex = 5000 - __instance.width - newIndex;
-                    if (!leftSide)
+                    if (leftSide)
                         newIndex -= 2000;
-
+                    Console.WriteLine("Final: " + newIndex);
                     __instance.SetProperty("lineIndex", newIndex);
                     return false;
                 }
-                if (__instance.lineIndex > 3)
+                else if (__instance.lineIndex > 3)
                 {
                     int diff = ((__instance.lineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;

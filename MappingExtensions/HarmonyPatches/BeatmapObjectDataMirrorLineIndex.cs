@@ -23,22 +23,22 @@ new Type[] {
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
-                        leftSide = true;
+                        newIndex += 2000;
                     }
 
+                    if (newIndex >= 4000)
+                        leftSide = true;
 
-                    if (leftSide)
-                        newIndex += 2000;
 
                     newIndex = 5000 - newIndex;
-                    if (!leftSide)
+                    if (leftSide)
                         newIndex -= 2000;
 
                     __instance.SetProperty("lineIndex", newIndex);
                     return false;
                 }
 
-                if (__instance.lineIndex > 3)
+                else if (__instance.lineIndex > 3)
                 {
                     int diff = ((__instance.lineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;

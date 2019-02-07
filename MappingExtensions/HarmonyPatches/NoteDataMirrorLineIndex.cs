@@ -20,24 +20,24 @@ new Type[] {
                 if (__instance.lineIndex >= 1000 || __instance.lineIndex <= -1000)
                 {
                     int newIndex = __instance.lineIndex;
+                    Console.WriteLine("Initial: " + newIndex);
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
-                        leftSide = true;
+                        newIndex += 2000;
                     }
 
+                    if (newIndex >= 4000)
+                        leftSide = true;
 
-                    if (leftSide)
-                        newIndex += 2000;
 
                     newIndex = 5000 - newIndex;
-                    if (!leftSide)
+                    if (leftSide)
                         newIndex -= 2000;
-
+                    Console.WriteLine("Final: " + newIndex);
                     __instance.SetProperty("lineIndex", newIndex);
                 }
-                
-                if (__instance.lineIndex > 3)
+                else if (__instance.lineIndex > 3)
                 {
                     int diff = ((__instance.lineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
@@ -50,28 +50,28 @@ new Type[] {
                     int newlaneCount = 4 + diff;
                     __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __instance.lineIndex);
                 }
-                
+
                 if (__instance.flipLineIndex >= 1000 || __instance.flipLineIndex <= -1000)
                 {
                     int newIndex = __instance.flipLineIndex;
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
-                        leftSide = true;
+                        newIndex += 2000;
                     }
 
+                    if (newIndex >= 4000)
+                        leftSide = true;
 
-                    if (leftSide)
-                        newIndex += 2000;
 
                     newIndex = 5000 - newIndex;
-                    if (!leftSide)
+                    if (leftSide)
                         newIndex -= 2000;
 
                     __instance.SetProperty("flipLineIndex", newIndex);
                 }
-               
-                if (__instance.flipLineIndex > 3)
+
+                else if (__instance.flipLineIndex > 3)
                 {
                     int diff = ((__instance.flipLineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
@@ -84,7 +84,7 @@ new Type[] {
                     int newlaneCount = 4 + diff;
                     __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - __instance.flipLineIndex);
                 }
-                
+
                 return false;
             }
 
