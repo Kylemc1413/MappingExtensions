@@ -13,13 +13,23 @@ new Type[] {
     [HarmonyPatch("MirrorLineIndex", MethodType.Normal)]
     class NoteDataMirrorLineIndex
     {
-        static bool Prefix(int lineCount, ref NoteData __instance)
+        static void Prefix(int lineCount, ref NoteData __instance, ref string __state)
         {
-            if (__instance.lineIndex > 3 || __instance.lineIndex < 0 || __instance.flipLineIndex > 3 || __instance.flipLineIndex < 0)
+     
+            __state = $"{__instance.lineIndex};{__instance.flipLineIndex}";
+        }
+
+        static void Postfix(int lineCount, ref NoteData __instance, ref string __state)
+        {
+            int lineIndex = int.Parse(__state.Split(';')[0]);
+            int flipLineIndex = int.Parse(__state.Split(';')[1]);
+
+            Console.WriteLine("1");
+            if (lineIndex > 3 || lineIndex < 0)
             {
-                if (__instance.lineIndex >= 1000 || __instance.lineIndex <= -1000)
+                if (lineIndex >= 1000 || lineIndex <= -1000)
                 {
-                    int newIndex = __instance.lineIndex;
+                    int newIndex = lineIndex;
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
@@ -35,23 +45,27 @@ new Type[] {
                         newIndex -= 2000;
                     __instance.SetProperty("lineIndex", newIndex);
                 }
-                else if (__instance.lineIndex > 3)
+                else if (lineIndex > 3)
                 {
-                    int diff = ((__instance.lineIndex - 3) * 2);
+                    int diff = ((lineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __instance.lineIndex);
+                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - lineIndex);
 
                 }
-                else if (__instance.lineIndex < 0)
+                else if (lineIndex < 0)
                 {
-                    int diff = ((0 - __instance.lineIndex) * 2);
+                    int diff = ((0 - lineIndex) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __instance.lineIndex);
+                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - lineIndex);
                 }
-
-                if (__instance.flipLineIndex >= 1000 || __instance.flipLineIndex <= -1000)
+                Console.WriteLine("2");
+            }
+            Console.WriteLine("3");
+            if (flipLineIndex > 3 || flipLineIndex < 0)
+            {
+                if (flipLineIndex >= 1000 || flipLineIndex <= -1000)
                 {
-                    int newIndex = __instance.flipLineIndex;
+                    int newIndex = flipLineIndex;
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
@@ -69,26 +83,26 @@ new Type[] {
                     __instance.SetProperty("flipLineIndex", newIndex);
                 }
 
-                else if (__instance.flipLineIndex > 3)
+                else if (flipLineIndex > 3)
                 {
-                    int diff = ((__instance.flipLineIndex - 3) * 2);
+                    int diff = ((flipLineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - __instance.flipLineIndex);
+                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
 
                 }
-                else if (__instance.flipLineIndex < 0)
+                else if (flipLineIndex < 0)
                 {
-                    int diff = ((0 - __instance.flipLineIndex) * 2);
+                    int diff = ((0 - flipLineIndex) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - __instance.flipLineIndex);
+                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
                 }
-
-                return false;
+                Console.WriteLine("4");
             }
 
-            return true;
 
         }
 
     }
+
 }
+

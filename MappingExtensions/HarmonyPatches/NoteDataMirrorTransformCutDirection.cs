@@ -12,27 +12,28 @@ new Type[] {
             })]
     [HarmonyPatch("MirrorTransformCutDirection", MethodType.Normal)]
     class NoteDataMirrorTransformCutDirection
-    {
-        static bool Prefix(ref NoteData __instance)
+    { 
+        static void Prefix(ref NoteData __instance, ref NoteCutDirection __state)
         {
-            if ((int)__instance.cutDirection >= 1000)
+            __state = __instance.cutDirection;
+            
+          
+        }
+
+        static void Postfix(ref NoteData __instance, ref NoteCutDirection __state)
+        {
+            if ((int)__state >= 1000)
             {
-                int cutdir = (int)__instance.cutDirection;
-                int angle =  cutdir - 1000;
+                int cutdir = (int)__state;
+                int angle = cutdir - 1000;
 
                 angle = angle > 180 ? ((angle - 360) * -1) : 360 - angle;
 
                 int newdir = angle + 1000;
 
                 __instance.SetProperty("cutDirection", (NoteCutDirection)newdir);
-                return false;
             }
 
-
-
-
-            return true;
         }
-
     }
 }

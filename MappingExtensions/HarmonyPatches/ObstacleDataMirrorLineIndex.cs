@@ -13,13 +13,18 @@ new Type[] {
     [HarmonyPatch("MirrorLineIndex", MethodType.Normal)]
     class ObstacleDataMirrorLineIndex
     {
-        static bool Prefix(int lineCount, ref ObstacleData __instance)
+        static void Prefix(int lineCount, ref ObstacleData __instance, ref int __state)
         {
-            if (__instance.lineIndex > 3 || __instance.lineIndex < 0)
+            __state = __instance.lineIndex;
+        }
+
+        static void Postfix(int lineCount, ref ObstacleData __instance, ref int __state)
+        {
+            if (__state > 3 || __state < 0)
             {
-                if (__instance.lineIndex >= 1000 || __instance.lineIndex <= -1000)
+                if (__state >= 1000 || __state <= -1000)
                 {
-                    int newIndex = __instance.lineIndex;
+                    int newIndex = __state;
                     bool leftSide = false;
                     if (newIndex <= -1000)
                     {
@@ -31,25 +36,22 @@ new Type[] {
                     if (leftSide)
                         newIndex -= 2000;
                     __instance.SetProperty("lineIndex", newIndex);
-                    return false;
                 }
-                else if (__instance.lineIndex > 3)
+                else if (__state > 3)
                 {
-                    int diff = ((__instance.lineIndex - 3) * 2);
+                    int diff = ((__state - 3) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __instance.lineIndex);
+                    __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __state);
 
                 }
-                else if (__instance.lineIndex < 0)
+                else if (__state < 0)
                 {
-                    int diff = ((0 - __instance.lineIndex) * 2);
+                    int diff = ((0 - __state) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __instance.lineIndex);
+                    __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __state);
                 }
-                return false;
 
             }
-            return true;
         }
 
     }
