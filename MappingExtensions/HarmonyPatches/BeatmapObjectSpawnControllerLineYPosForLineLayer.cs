@@ -19,7 +19,7 @@ new Type[] {
 
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)
             {
-                __result = ____upperLinesYPos - delta + (((int)lineLayer) * (delta / 1000f));
+                __result = ____upperLinesYPos - delta - delta + (((int)lineLayer) * (delta / 1000f));
 
                 return;
             }

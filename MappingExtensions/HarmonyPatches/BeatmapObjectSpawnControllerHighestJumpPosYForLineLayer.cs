@@ -19,7 +19,7 @@ new Type[] {
 
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)
             {
-                __result = ____upperLinesHighestJumpPosY - delta + ____globalYJumpOffset + (((int)lineLayer) * (delta / 1000f));
+                __result = ____upperLinesHighestJumpPosY - delta - delta + ____globalYJumpOffset + (((int)lineLayer) * (delta / 1000f));
 
                 return;
             }

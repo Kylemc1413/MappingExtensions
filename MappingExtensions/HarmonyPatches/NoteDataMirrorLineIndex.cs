@@ -24,7 +24,6 @@ new Type[] {
             int lineIndex = int.Parse(__state.Split(';')[0]);
             int flipLineIndex = int.Parse(__state.Split(';')[1]);
 
-            Console.WriteLine("1");
             if (lineIndex > 3 || lineIndex < 0)
             {
                 if (lineIndex >= 1000 || lineIndex <= -1000)
@@ -58,9 +57,7 @@ new Type[] {
                     int newlaneCount = 4 + diff;
                     __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - lineIndex);
                 }
-                Console.WriteLine("2");
             }
-            Console.WriteLine("3");
             if (flipLineIndex > 3 || flipLineIndex < 0)
             {
                 if (flipLineIndex >= 1000 || flipLineIndex <= -1000)
@@ -96,7 +93,6 @@ new Type[] {
                     int newlaneCount = 4 + diff;
                     __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
                 }
-                Console.WriteLine("4");
             }
 
 
