@@ -91,6 +91,7 @@
     <Compile Include="HarmonyPatches\FlyingScoreSpawnerSpawnFlyingScore.cs" />
     <Compile Include="HarmonyPatches\GameNoteControllerHandleCut.cs" />
     <Compile Include="HarmonyPatches\NoteCuDirectionExtensionsRotation.cs" />
+    <Compile Include="HarmonyPatches\ObstacleControllerInit.cs" />
     <Compile Include="HarmonyPatches\NoteDataMirrorLineIndex.cs" />
     <Compile Include="HarmonyPatches\NoteDataMirrorTransformCutDirection.cs" />
     <Compile Include="HarmonyPatches\ObstacleDataMirrorLineIndex.cs" />
