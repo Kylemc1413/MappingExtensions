@@ -22,6 +22,7 @@ namespace MappingExtensions
         {
             SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions");
             SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Precision Placement");
             SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Extra Note Angles");
             SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-More Lanes");
