@@ -7,7 +7,7 @@ using Harmony;
 using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
-
+    /*
     [HarmonyPatch(typeof(BeatmapDataClearNotesBeforeStartTimeTransform),
           new Type[] {
 
@@ -168,6 +168,6 @@ namespace MappingExtensions.Harmony_Patches
             }
         }
     }
-
+    */
 
 }
