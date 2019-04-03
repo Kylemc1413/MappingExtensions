@@ -21,7 +21,7 @@ new Type[] {
         static void Postfix(int lineCount, ref ObstacleData __instance, ref int __state)
         {
             bool precisionWidth = __instance.width >= 1000 && __instance.width <= 4000;
-            Console.WriteLine("Width: " + __instance.width);
+         //   Console.WriteLine("Width: " + __instance.width);
             if (__state > 3 || __state < 0 || precisionWidth)
             {
                 if (__state >= 1000 || __state <= -1000)
@@ -45,12 +45,12 @@ new Type[] {
                     {
                         float preciseIndex = (newIndex - 1000f) / 1000f;
                         float preciseWidth = (__instance.width - 1000f) / 1000f;
-                        Console.WriteLine(preciseIndex + " Index");
-                        Console.WriteLine(preciseWidth + " Width");
+                 //       Console.WriteLine(preciseIndex + " Index");
+                 //       Console.WriteLine(preciseWidth + " Width");
                         float newPlacement = (((4 - preciseWidth - preciseIndex) * 1000f) + 1000f);
                         if (newPlacement < 1000)
                             newPlacement -= 2000f;
-                        Console.WriteLine(newPlacement + " Precise");
+                 //       Console.WriteLine(newPlacement + " Precise");
                         __instance.SetProperty("lineIndex", (int)newPlacement);
                     }
 
@@ -71,11 +71,11 @@ new Type[] {
                 {
                     float preciseWidth = (__instance.width - 1000f) / 1000f;
                     float mirroredIndex = (((4 - preciseWidth - __state) * 1000f) + 1000f);
-                    Console.WriteLine(mirroredIndex + " Mirror Index");
-                    Console.WriteLine(preciseWidth + " Width");
+      //              Console.WriteLine(mirroredIndex + " Mirror Index");
+        //            Console.WriteLine(preciseWidth + " Width");
                     if (mirroredIndex < 1000)
                         mirroredIndex -= 2000f;
-                    Console.WriteLine(mirroredIndex.ToString() + " Standard");
+      //              Console.WriteLine(mirroredIndex.ToString() + " Standard");
                     __instance.SetProperty("lineIndex", (int)mirroredIndex);
                 }
 
