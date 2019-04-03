@@ -1,7 +1,7 @@
 ##### [GitHub](https://github.com/Kylemc1413/MappingExtensions)
-This adds a host of new things you can do with your maps, currently only possible through JSON editing until an editor adds support for the features. If you map with these, they will be auto detected as requirements by [Song Loader](/mod/song-loader) 6.0.0 or later, and players will not be able to play them without mapping extensions installed. HOWEVER:
+This adds a host of new things you can do with your maps, currently only possible through JSON editing until an editor adds support for the features. If you map with these, they will be auto detected as requirements by Song Loader 6.0.0 or later, and players will not be able to play them without mapping extensions installed. HOWEVER:
 
-#### Having a map with the new features in your library without [Song Loader](/mod/song-loader) 6.0.0 or later will softlock your game
+#### Having a map with the new features in your library without Song Loader 6.0.0 or later will softlock your game
 
 #### If you use any of these features, be sure to add "Mapping Extensions" as a requirement for your map, you can go [Here](https://github.com/Kylemc1413/BeatSaberSongLoader/blob/master/README.md#difficulty-json-additional-fields-ie-expertjson--etc) to see how adding requirements to the difficulty json works
 ## Capabilities
