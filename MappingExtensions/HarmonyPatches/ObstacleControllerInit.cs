@@ -69,7 +69,7 @@ typeof(float),
                 float multiplier = 1f;
                 if ((int)obstacleData.obstacleType >= 1000)
                 {
-                    multiplier = ((int)obstacleData.obstacleType - 1000) / 1000;
+                    multiplier = ( (float)((int)obstacleData.obstacleType) - 1000) / 1000;
                 }
                 ____stretchableObstacle.SetSize(num * 0.98f, ____height * multiplier, length);
                 ____bounds = ____stretchableObstacle.bounds;
