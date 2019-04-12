@@ -26,7 +26,7 @@ This adds a host of new things you can do with your maps, currently only possibl
 - You can also use precision line index placement like described for notes above
 #### _More Precise Wall Adjustments_
 - You can change the type of walls to be a value between 40001 and 4005000 to control how high up the wall starts and how high the wall itself is, the formula for which is below, with wall height ranging from 0 to 4000 and start height ranging from 0 to 999
-- Whereas for Regular precision height 1000 would be "0" for more 4000+ treat the wall height as the literal value rather than adding 1000 to it when calculating
+- Whereas for Regular precision height a height of 1000 would be "0" for 4000+ treat the wall height as the literal value rather than adding 1000 to it when calculating
 - Start height corresponds approximately to a wall height 4x as high, so a start height of 250 would equate to just above normal wall height 1000, so the wall would start just above the top of a normal wall
 ```cs
 type = wall Height * 1000 + start height + 4001
