@@ -15,7 +15,7 @@ namespace MappingExtensions
     public class Plugin : IPlugin
     {
         public string Name => "Mapping Extensions";
-        public string Version => "1.1.3";
+        public string Version => "1.2.0";
         public static HarmonyInstance harmony;
 
         public void OnApplicationStart()

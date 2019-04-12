@@ -20,6 +20,14 @@ every increase will be 1/1000 of a lane.
 - Do not use values between -1000 and 1000, using a value like 500 will simply move the note nearly 500 regular lanes outside of the normal space
 
 - 1000/-1000 are both equivalent to the normal "leftmost" lane, and going higher than 1000 or lower than -1000 will extend in their respective directions , so 2000 would be equivalent to a line index of 1, -2000 would be the equivalent of a line index of -1, etc etc, with the same logic applying to line layers as well. 
+
 ### _Precise Wall Adjustments_
 - You can change the width of walls to be a value greater than or equal to 1000 to precisely control the width of the wall, with 1000 being the equivalent of 0 width, 2000 being the equivalent of 1 width, etc etc
-- You can change the obstacleType of walls to be a value between 1000 and 4000 to control the height of the walls, with 1000 being a wall that has no height and is just flat on the ground, 2000 being a normal full height wall, and going higher than that (Up till 4000) being taller than normal
+- You can change the type of walls to be a value between 1000 and 4000 to control the height of the walls, with 1000 being a wall that has no height and is just flat on the ground, 2000 being a normal full height wall, and going higher than that (Up till 4000) being taller than normal
+#### _More Precise Wall Adjustments_
+- You can change the type of walls to be a value between 40001 and 4005000 to control how high up the wall starts and how high the wall itself is, the formula for which is below, with wall height ranging from 0 to 4000 and start height ranging from 0 to 999
+```cs
+type = wall Height * 1000 + start height + 4001
+//Example for a wall height of 2300 and a start height of 300
+type = 2300 * 1000 + 300 + 4001 = 2304301
+```

@@ -22,6 +22,7 @@ typeof(float),
     [HarmonyPatch("Init", MethodType.Normal)]
     class ObstacleControllerInit
     {
+        enum Mode { preciseHeight, preciseHeightStart };
         static void Prefix(ObstacleData obstacleData, ref Vector3 startPos,
             ref Vector3 midPos, ref Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, ref float singleLineWidth)
         {/*
@@ -47,15 +48,32 @@ typeof(float),
             Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, float singleLineWidth,
             ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref float ____height)
         {
-            if (obstacleData.width >= 1000 || ((int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000))
+            if (obstacleData.width >= 1000 || ( ((int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000) || ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4005000)))
             {
+                Mode mode = ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4100000) ? Mode.preciseHeightStart : Mode.preciseHeight;
+                int height = 0;
+                int startHeight = 0;
+                if(mode == Mode.preciseHeightStart)
+                {
+                    int value = (int)obstacleData.obstacleType;
+                    value -= 4001;
+                    height = value / 1000;
+                    startHeight = value % 1000;
+               //     Console.WriteLine(height + "<---Height       StartHeight---> " + startHeight);
+                }
+                else
+                {
+                    int value = (int)obstacleData.obstacleType;
+                    height = value - 1000;
+                }
                 float num = 0;
                 if (obstacleData.width >= 1000)
                 {
+                    
                     float width = (float)obstacleData.width - 1000;
                     float precisionLineWidth = singleLineWidth / 1000;
-                    num = width * precisionLineWidth;
-                    Vector3 b = new Vector3((num - singleLineWidth) * 0.5f, 0f, 0f);
+                    num = width * precisionLineWidth;                      //Change y of b for start height
+                    Vector3 b = new Vector3((num - singleLineWidth) * 0.5f, 4 * ((float)startHeight/1000), 0f);
                     ____startPos = startPos + b;
                     ____midPos = midPos + b;
                     ____endPos = endPos + b;
@@ -69,7 +87,7 @@ typeof(float),
                 float multiplier = 1f;
                 if ((int)obstacleData.obstacleType >= 1000)
                 {
-                    multiplier = ( (float)((int)obstacleData.obstacleType) - 1000) / 1000;
+                    multiplier = (float)height / 1000f;
                 }
                 ____stretchableObstacle.SetSize(num * 0.98f, ____height * multiplier, length);
                 ____bounds = ____stretchableObstacle.bounds;
@@ -83,4 +101,24 @@ typeof(float),
     }
 
 }
+
+
+
+/*
+  
+  int top = 2340;
+            int lower = 620;
+            //store
+            int storedValue = top * 1000 + lower + 4001;
+
+            //load
+            if (storedValue > 4000)
+            {
+                storedValue -= 4001;
+                int retrievedTop = storedValue/1000; //is the floor even necessary?
+                int retrievedLower = storedValue % 1000;
+                Console.WriteLine(retrievedTop  + " " + retrievedLower);
+            }
+
+    */
 
