@@ -67,7 +67,7 @@ typeof(float),
                     height = value - 1000;
                 }
                 float num = 0;
-                if (obstacleData.width >= 1000)
+                if ( (obstacleData.width >= 1000) || (mode == Mode.preciseHeightStart) )
                 {
                     
                     float width = (float)obstacleData.width - 1000;
@@ -91,7 +91,7 @@ typeof(float),
                 }
                 ____stretchableObstacle.SetSize(num * 0.98f, ____height * multiplier, length);
                 ____bounds = ____stretchableObstacle.bounds;
-
+              //  ____stretchableObstacle.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, 180f));
 
 
 
