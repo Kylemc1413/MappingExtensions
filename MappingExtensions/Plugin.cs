@@ -15,17 +15,17 @@ namespace MappingExtensions
     public class Plugin : IPlugin
     {
         public string Name => "MappingExtensions";
-        public string Version => "1.2.2";
+        public string Version => "1.2.3";
         public static HarmonyInstance harmony;
 
         public void OnApplicationStart()
         {
             SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions");
-            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Precision Placement");
-            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-Extra Note Angles");
-            SongLoaderPlugin.SongLoader.RegisterCapability("Mapping Extensions-More Lanes");
+            SongCore.Collections.RegisterCapability("Mapping Extensions");
+            SongCore.Collections.RegisterCapability("Mapping Extensions-Precision Placement");
+            SongCore.Collections.RegisterCapability("Mapping Extensions-Extra Note Angles");
+            SongCore.Collections.RegisterCapability("Mapping Extensions-More Lanes");
             harmony = HarmonyInstance.Create("com.kyle1413.BeatSaber.MappingExtensions");
             ApplyPatches();
 
