@@ -3,7 +3,7 @@ This adds a host of new things you can do with your maps, currently only possibl
 
 #### Having a map with the new features in your library without Song Loader 6.0.0 or later will softlock your game
 
-#### If you use any of these features, be sure to add "Mapping Extensions" as a requirement for your map, you can go [Here](https://github.com/Kylemc1413/BeatSaberSongLoader/blob/master/README.md#difficulty-json-additional-fields-ie-expertjson--etc) to see how adding requirements to the difficulty json works
+#### If you use any of these features, be sure to add "Mapping Extensions" as a requirement for your map, you can go [Here](https://github.com/Kylemc1413/SongCore/blob/master/README.md) to see how adding requirements to the difficulty json works
 ## Capabilities
 ### _Extra Lanes/Layers_
 - You can simply change the `_lineIndex`  and `_lineLayer` of a note/bomb/(walls can only change Index) to values outside the normal range and they will show up there accordingly, letting you extend your map further outward/vertically, or simply placing things like bombs or walls further out for aesthetic
