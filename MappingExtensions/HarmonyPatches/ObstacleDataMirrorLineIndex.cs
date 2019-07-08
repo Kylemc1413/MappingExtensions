@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,63 +20,52 @@ new Type[] {
 
         static void Postfix(int lineCount, ref ObstacleData __instance, ref int __state)
         {
-            bool precisionWidth = __instance.width >= 1000 && __instance.width <= 4000;
-         //   Console.WriteLine("Width: " + __instance.width);
+            bool precisionWidth = __instance.width >= 1000;
+            //   Console.WriteLine("Width: " + __instance.width);
             if (__state > 3 || __state < 0 || precisionWidth)
             {
-                if (__state >= 1000 || __state <= -1000)
+                if (__state >= 1000 || __state <= -1000 || precisionWidth) // precision lineIndex
                 {
                     int newIndex = __state;
-                    bool leftSide = false;
-                    if (newIndex <= -1000)
+                    if (newIndex <= -1000) // normalize index values, we'll fix them later
                     {
-                        newIndex += 2000;
+                        newIndex += 1000;
                     }
-                    if (newIndex >= 4000)
-                        leftSide = true;
-                    if (!precisionWidth)
+                    else if (newIndex >= 1000)
                     {
-                        newIndex = 5000 - __instance.width - newIndex;
-                        if (leftSide)
-                            newIndex -= 2000;
-                        __instance.SetProperty("lineIndex", newIndex);
+                        newIndex += -1000;
                     }
                     else
                     {
-                        float preciseIndex = (newIndex - 1000f) / 1000f;
-                        float preciseWidth = (__instance.width - 1000f) / 1000f;
-                 //       Console.WriteLine(preciseIndex + " Index");
-                 //       Console.WriteLine(preciseWidth + " Width");
-                        float newPlacement = (((4 - preciseWidth - preciseIndex) * 1000f) + 1000f);
-                        if (newPlacement < 1000)
-                            newPlacement -= 2000f;
-                 //       Console.WriteLine(newPlacement + " Precise");
-                        __instance.SetProperty("lineIndex", (int)newPlacement);
+                        newIndex = newIndex * 1000; //convert lineIndex to precision if not already
                     }
+                    newIndex = (((newIndex - 2000) * -1) + 2000); //flip lineIndex
 
+                    int newWidth = __instance.width; //normalize wall width
+                    if (newWidth < 1000)
+                    {
+                        newWidth = newWidth * 1000;
+                    }
+                    else
+                    {
+                        newWidth -= 1000;
+                    }
+                    newIndex = newIndex - newWidth;
+
+                    if (newIndex < 0)
+                    { //this is where we fix them
+                        newIndex -= 1000;
+                    }
+                    else
+                    {
+                        newIndex += 1000;
+                    }
+                    __instance.SetProperty("lineIndex", newIndex);
                 }
-                else if (__state > 3)
+                else // state > -1000 || state < 1000 assumes no precision width
                 {
-                        int diff = ((__state - 3) * 2);
-                        int newlaneCount = 4 + diff;
-                        __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __state);
-                }
-                else if (__state < 0)
-                {
-                        int diff = ((0 - __state) * 2);
-                    int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - __instance.width - __state);
-                }
-                else if (precisionWidth)
-                {
-                    float preciseWidth = (__instance.width - 1000f) / 1000f;
-                    float mirroredIndex = (((4 - preciseWidth - __state) * 1000f) + 1000f);
-      //              Console.WriteLine(mirroredIndex + " Mirror Index");
-        //            Console.WriteLine(preciseWidth + " Width");
-                    if (mirroredIndex < 1000)
-                        mirroredIndex -= 2000f;
-      //              Console.WriteLine(mirroredIndex.ToString() + " Standard");
-                    __instance.SetProperty("lineIndex", (int)mirroredIndex);
+                    int mirrorLane = (((__state - 2) * -1) + 2); //flip lineIndex
+                    __instance.SetProperty("lineIndex", mirrorLane - __instance.width); //adjust for wall width
                 }
 
             }
