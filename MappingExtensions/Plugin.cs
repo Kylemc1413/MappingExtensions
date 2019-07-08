@@ -33,6 +33,8 @@ namespace MappingExtensions
 
         private void SceneManagerOnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
+            if (newScene.name == "MenuCore")
+                active = false;
             if (newScene.name == "GameCore")
             {
                 CheckActivation();
@@ -42,7 +44,10 @@ namespace MappingExtensions
 
         }
 
-
+        public static void ForceActivateForSong()
+        {
+            active = true;
+        }
         void CheckActivation()
         {
             var diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
@@ -95,7 +100,7 @@ namespace MappingExtensions
 
         }
 
-        public static void ApplyPatches()
+        internal static void ApplyPatches()
         {
      //       Console.WriteLine("Patching");
             try
@@ -115,7 +120,7 @@ namespace MappingExtensions
 
         }
 
-        public static void RemovePatches()
+        internal static void RemovePatches()
         {
        //     Console.WriteLine("UnPatching");
             try
