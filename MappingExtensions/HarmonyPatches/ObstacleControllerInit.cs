@@ -48,6 +48,7 @@ typeof(float),
             Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, float singleLineWidth,
             ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref float ____height)
         {
+            if (!Plugin.active) return;
             if (obstacleData.width >= 1000 || ( ((int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000) || ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4005000)))
             {
                 Mode mode = ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4100000) ? Mode.preciseHeightStart : Mode.preciseHeight;
@@ -89,7 +90,7 @@ typeof(float),
                 {
                     multiplier = (float)height / 1000f;
                 }
-                ____stretchableObstacle.SetSize(num * 0.98f, ____height * multiplier, length);
+                ____stretchableObstacle.SetSize(Mathf.Abs(num * 0.98f),Mathf.Abs(____height * multiplier), Mathf.Abs(length));
                 ____bounds = ____stretchableObstacle.bounds;
               //  ____stretchableObstacle.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, 180f));
 

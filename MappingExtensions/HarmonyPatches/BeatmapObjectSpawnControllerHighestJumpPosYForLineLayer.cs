@@ -15,6 +15,7 @@ new Type[] {
     {
         static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesHighestJumpPosY, ref float ____globalYJumpOffset, ref float ____upperLinesHighestJumpPosY)
         {
+            if (!Plugin.active) return;
             float delta = (____topLinesHighestJumpPosY - ____upperLinesHighestJumpPosY);
 
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)
@@ -31,7 +32,7 @@ new Type[] {
                 return;
             }
 
-            if( (int)lineLayer < 0)
+            if ((int)lineLayer < 0)
             {
                 __result = ____upperLinesHighestJumpPosY - delta + ____globalYJumpOffset + ((int)lineLayer * delta);
                 return;

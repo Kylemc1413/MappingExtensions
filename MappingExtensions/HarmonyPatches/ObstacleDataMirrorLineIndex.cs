@@ -20,6 +20,7 @@ new Type[] {
 
         static void Postfix(int lineCount, ref ObstacleData __instance, ref int __state)
         {
+            if (!Plugin.active) return;
             bool precisionWidth = __instance.width >= 1000;
             //   Console.WriteLine("Width: " + __instance.width);
             if (__state > 3 || __state < 0 || precisionWidth)

@@ -15,6 +15,7 @@ new Type[] {
     {
         static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesYPos, ref float ____upperLinesYPos)
         {
+            if (!Plugin.active) return;
             float delta = (____topLinesYPos - ____upperLinesYPos);
 
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)

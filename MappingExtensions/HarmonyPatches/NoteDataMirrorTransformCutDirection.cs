@@ -22,6 +22,7 @@ new Type[] {
 
         static void Postfix(ref NoteData __instance, ref NoteCutDirection __state)
         {
+            if (!Plugin.active) return;
             if ((int)__state >= 1000)
             {
                 int cutdir = (int)__state;

@@ -20,42 +20,43 @@ new Type[] {
 
         static void Postfix(int lineCount, ref BeatmapObjectData __instance, ref int __state)
         {
+            if (!Plugin.active) return;
             if (__state > 3 || __state < 0)
-            {
-                if (__state >= 1000 || __state <= -1000)
                 {
-                    int newIndex = __state;
-                    bool leftSide = false;
-                    if (newIndex <= -1000)
+                    if (__state >= 1000 || __state <= -1000)
                     {
-                        newIndex += 2000;
+                        int newIndex = __state;
+                        bool leftSide = false;
+                        if (newIndex <= -1000)
+                        {
+                            newIndex += 2000;
+                        }
+
+                        if (newIndex >= 4000)
+                            leftSide = true;
+
+
+                        newIndex = 5000 - newIndex;
+                        if (leftSide)
+                            newIndex -= 2000;
+
+                        __instance.SetProperty("lineIndex", newIndex);
                     }
 
-                    if (newIndex >= 4000)
-                        leftSide = true;
+                    else if (__state > 3)
+                    {
+                        int diff = ((__state - 3) * 2);
+                        int newlaneCount = 4 + diff;
+                        __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __state);
 
-
-                    newIndex = 5000 - newIndex;
-                    if (leftSide)
-                        newIndex -= 2000;
-
-                    __instance.SetProperty("lineIndex", newIndex);
+                    }
+                    else if (__state < 0)
+                    {
+                        int diff = ((0 - __state) * 2);
+                        int newlaneCount = 4 + diff;
+                        __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __state);
+                    }
                 }
-
-                else if (__state > 3)
-                {
-                    int diff = ((__state - 3) * 2);
-                    int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __state);
-
-                }
-                else if (__state < 0)
-                {
-                    int diff = ((0 - __state) * 2);
-                    int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - __state);
-                }
-            }
         }
 
     }

@@ -21,6 +21,7 @@ namespace MappingExtensions.Harmony_Patches
     {
         static void Prefix(NoteCutInfo noteCutInfo, ref int noteLineIndex, int multiplier, Vector3 pos, Color color, SaberAfterCutSwingRatingCounter saberAfterCutSwingRatingCounter)
         {
+            if (!Plugin.active) return;
             if (noteLineIndex < 0)
                 noteLineIndex = 0;
             if (noteLineIndex > 3)

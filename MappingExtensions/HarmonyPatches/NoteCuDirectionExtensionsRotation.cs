@@ -18,7 +18,8 @@ new Type[] {
     {
         static void Postfix(NoteCutDirection cutDirection, ref Quaternion __result)
         {
-           if( (int)cutDirection >= 1000 && (int)cutDirection <= 1360)
+            if (!Plugin.active) return;
+            if ( (int)cutDirection >= 1000 && (int)cutDirection <= 1360)
             {
                 int angle = 1000 - (int)cutDirection;
                 __result = default(Quaternion);

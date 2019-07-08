@@ -21,6 +21,7 @@ new Type[] {
 
         static void Postfix(int lineCount, ref NoteData __instance, ref string __state)
         {
+            if (!Plugin.active) return;
             int lineIndex = int.Parse(__state.Split(';')[0]);
             int flipLineIndex = int.Parse(__state.Split(';')[1]);
 
