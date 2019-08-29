@@ -8,21 +8,12 @@ using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(ObstacleController),
-new Type[] {
-typeof(ObstacleData),
-typeof(Vector3),
-typeof(Vector3),
-typeof(Vector3),
-typeof(float),
-typeof(float),
-typeof(float),
-typeof(float),
-})]
+    [HarmonyPatch(typeof(ObstacleController))]
     [HarmonyPatch("Init", MethodType.Normal)]
     class ObstacleControllerInit
     {
         enum Mode { preciseHeight, preciseHeightStart };
+        internal static Color? currentObstacleColor;
         static void Prefix(ObstacleData obstacleData, ref Vector3 startPos,
             ref Vector3 midPos, ref Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, ref float singleLineWidth)
         {/*
@@ -46,26 +37,26 @@ typeof(float),
 
         static void Postfix(ref ObstacleController __instance, ObstacleData obstacleData, Vector3 startPos,
             Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, float singleLineWidth,
-            ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref float ____height)
+            ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref Color ____color, ref float height)
         {
             if (!Plugin.active) return;
             if (obstacleData.width >= 1000 || ( ((int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000) || ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4005000)))
             {
                 Mode mode = ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4100000) ? Mode.preciseHeightStart : Mode.preciseHeight;
-                int height = 0;
+                int obsHeight = 0;
                 int startHeight = 0;
                 if(mode == Mode.preciseHeightStart)
                 {
                     int value = (int)obstacleData.obstacleType;
                     value -= 4001;
-                    height = value / 1000;
+                    obsHeight = value / 1000;
                     startHeight = value % 1000;
                //     Console.WriteLine(height + "<---Height       StartHeight---> " + startHeight);
                 }
                 else
                 {
                     int value = (int)obstacleData.obstacleType;
-                    height = value - 1000;
+                    obsHeight = value - 1000;
                 }
                 float num = 0;
                 if ( (obstacleData.width >= 1000) || (mode == Mode.preciseHeightStart) )
@@ -88,9 +79,10 @@ typeof(float),
                 float multiplier = 1f;
                 if ((int)obstacleData.obstacleType >= 1000)
                 {
-                    multiplier = (float)height / 1000f;
+                    multiplier = (float)obsHeight / 1000f;
                 }
-                ____stretchableObstacle.SetSize(Mathf.Abs(num * 0.98f),Mathf.Abs(____height * multiplier), Mathf.Abs(length));
+                if(currentObstacleColor == null) currentObstacleColor = Resources.FindObjectsOfTypeAll<ColorManager>().First().GetPrivateField<SimpleColorSO>("_obstaclesColor").color;
+                ____stretchableObstacle.SetSizeAndColor(Mathf.Abs(num * 0.98f),Mathf.Abs(height * multiplier), Mathf.Abs(length), currentObstacleColor.Value);
                 ____bounds = ____stretchableObstacle.bounds;
               //  ____stretchableObstacle.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, 180f));
 

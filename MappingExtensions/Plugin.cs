@@ -15,7 +15,7 @@ namespace MappingExtensions
     public class Plugin : IPlugin
     {
         public string Name => "MappingExtensions";
-        public string Version => "1.3.0";
+        public string Version => "1.3.1";
         public static HarmonyInstance harmony;
         internal static bool patched = false;
         internal static bool active;
@@ -33,13 +33,14 @@ namespace MappingExtensions
 
         private void SceneManagerOnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
+            Console.WriteLine("Switching to Scene: " + newScene.name + "With handle: " + newScene.handle);
             if (newScene.name == "MenuCore")
                 active = false;
             if (newScene.name == "GameCore")
             {
                 CheckActivation();
             }
-
+            Harmony_Patches.ObstacleControllerInit.currentObstacleColor = null;
 
 
         }
