@@ -7,22 +7,18 @@ using System.Media;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using IllusionPlugin;
 using Harmony;
-
+using IPA;
 namespace MappingExtensions
 {
-    public class Plugin : IPlugin
+    public class Plugin : IBeatSaberPlugin
     {
-        public string Name => "MappingExtensions";
-        public string Version => "1.3.2";
         public static HarmonyInstance harmony;
         internal static bool patched = false;
         internal static bool active;
         public void OnApplicationStart()
         {
-            SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+
             SongCore.Collections.RegisterCapability("Mapping Extensions");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Precision Placement");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Extra Note Angles");
@@ -31,7 +27,7 @@ namespace MappingExtensions
             ApplyPatches();
         }
 
-        private void SceneManagerOnActiveSceneChanged(Scene oldScene, Scene newScene)
+        public void OnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
        //     Console.WriteLine("Switching to Scene: " + newScene.name + "With handle: " + newScene.handle);
             if (newScene.name == "MenuCore")
@@ -74,7 +70,7 @@ namespace MappingExtensions
             }
 
         }
-        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode arg1)
+        public void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
         {
 
 
@@ -82,8 +78,7 @@ namespace MappingExtensions
 
         public void OnApplicationQuit()
         {
-            SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+
         }
 
         public void OnLevelWasLoaded(int level)
@@ -141,6 +136,11 @@ namespace MappingExtensions
         }
         public void OnFixedUpdate()
         {
+        }
+
+        public void OnSceneUnloaded(Scene scene)
+        {
+
         }
     }
 }

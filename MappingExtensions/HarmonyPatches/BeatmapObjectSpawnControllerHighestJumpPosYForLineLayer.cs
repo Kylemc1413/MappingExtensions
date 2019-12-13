@@ -13,14 +13,14 @@ new Type[] {
     [HarmonyPatch("HighestJumpPosYForLineLayer", MethodType.Normal)]
     class BeatmapObjectSpawnControllerHighestJumpPosYForLineLayer
     {
-        static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesHighestJumpPosY, ref float ____globalYJumpOffset, ref float ____upperLinesHighestJumpPosY)
+        static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesHighestJumpPosY, ref float ____globalJumpOffsetY, ref float ____upperLinesHighestJumpPosY)
         {
             if (!Plugin.active) return;
             float delta = (____topLinesHighestJumpPosY - ____upperLinesHighestJumpPosY);
 
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)
             {
-                __result = ____upperLinesHighestJumpPosY - delta - delta + ____globalYJumpOffset + (((int)lineLayer) * (delta / 1000f));
+                __result = ____upperLinesHighestJumpPosY - delta - delta + ____globalJumpOffsetY + (((int)lineLayer) * (delta / 1000f));
 
                 return;
             }
@@ -28,13 +28,13 @@ new Type[] {
             if ((int)lineLayer > 2)
             {
 
-                __result = ____upperLinesHighestJumpPosY - delta + ____globalYJumpOffset + ((int)lineLayer * delta);
+                __result = ____upperLinesHighestJumpPosY - delta + ____globalJumpOffsetY + ((int)lineLayer * delta);
                 return;
             }
 
             if ((int)lineLayer < 0)
             {
-                __result = ____upperLinesHighestJumpPosY - delta + ____globalYJumpOffset + ((int)lineLayer * delta);
+                __result = ____upperLinesHighestJumpPosY - delta + ____globalJumpOffsetY + ((int)lineLayer * delta);
                 return;
             }
 

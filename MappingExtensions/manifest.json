@@ -1,0 +1,18 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
+  "author": "Kyle1413",
+  "description": "Adds additional modifiers to the game, see readme for details.",
+  "gameVersion": "1.6.0",
+  "id": "MappingExtensions",
+  "name": "MappingExtensions",
+  "version": "1.3.5",
+  "dependsOn": {
+    "SongCore": "^2.0.0"
+  },
+  "links": {
+    "project-source": "https://github.com/Kylemc1413/MappingExtensions",
+    "donate": "https://ko-fi.com/kyle1413k"
+  },
+  "features": [
+  ]
+} 

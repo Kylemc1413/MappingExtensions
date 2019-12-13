@@ -100,7 +100,7 @@ namespace MappingExtensions.Harmony_Patches
             for (int num5 = 0; num5 < beatmapData.beatmapEventData.Length; num5++)
             {
                 BeatmapEventData beatmapEventData = beatmapData.beatmapEventData[num5];
-                array4[num5] = beatmapEventData.GetCopy();
+                array4[num5] = new BeatmapEventData(beatmapEventData.time, beatmapEventData.type, beatmapEventData.value);
             }
             __result = new BeatmapData(array3, array4);
             return false;
