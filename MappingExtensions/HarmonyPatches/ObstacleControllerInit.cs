@@ -13,7 +13,6 @@ namespace MappingExtensions.Harmony_Patches
     class ObstacleControllerInit
     {
         enum Mode { preciseHeight, preciseHeightStart };
-        internal static Color? currentObstacleColor;
         static void Prefix(ObstacleData obstacleData, ref Vector3 startPos,
             ref Vector3 midPos, ref Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, ref float singleLineWidth)
         {/*
@@ -37,7 +36,7 @@ namespace MappingExtensions.Harmony_Patches
 
         static void Postfix(ref ObstacleController __instance, ObstacleData obstacleData, Vector3 startPos,
             Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, float singleLineWidth,
-            ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref Color ____color, ref float height)
+            ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref SimpleColorSO ____color, ref float height)
         {
             if (!Plugin.active) return;
             if (obstacleData.width >= 1000 || ( ((int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000) || ((int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4005000)))
@@ -81,8 +80,7 @@ namespace MappingExtensions.Harmony_Patches
                 {
                     multiplier = (float)obsHeight / 1000f;
                 }
-                if(currentObstacleColor == null) currentObstacleColor = Resources.FindObjectsOfTypeAll<ColorManager>().First().GetPrivateField<SimpleColorSO>("_obstaclesColor").color;
-                ____stretchableObstacle.SetSizeAndColor(Mathf.Abs(num * 0.98f),Mathf.Abs(height * multiplier), Mathf.Abs(length), currentObstacleColor.Value);
+                ____stretchableObstacle.SetSizeAndColor(Mathf.Abs(num * 0.98f),Mathf.Abs(height * multiplier), Mathf.Abs(length), ____color.color);
                 ____bounds = ____stretchableObstacle.bounds;
               //  ____stretchableObstacle.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, 180f));
 
