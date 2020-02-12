@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "Kyle1413",
-  "description": "Adds additional modifiers to the game, see readme for details.",
+  "description": "This adds a host of new things you can do with your maps as a mapper, and allows you to play said maps as a player. View More Info for details.",
   "gameVersion": "1.6.0",
   "id": "MappingExtensions",
   "name": "MappingExtensions",
