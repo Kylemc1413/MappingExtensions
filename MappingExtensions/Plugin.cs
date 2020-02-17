@@ -36,7 +36,6 @@ namespace MappingExtensions
             {
                 CheckActivation();
             }
-            Harmony_Patches.ObstacleControllerInit.currentObstacleColor = null;
 
 
         }
