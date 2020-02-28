@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harmony;
+using HarmonyLib;
 using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
@@ -13,29 +13,9 @@ namespace MappingExtensions.Harmony_Patches
     class ObstacleControllerInit
     {
         enum Mode { preciseHeight, preciseHeightStart };
-        static void Prefix(ObstacleData obstacleData, ref Vector3 startPos,
-            ref Vector3 midPos, ref Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, ref float singleLineWidth)
-        {/*
-            if (obstacleData.width >= 1000)
-            {
-                float width = (float)obstacleData.width - 1000;
-                Console.WriteLine("Width: " + width + " | singleLineWidth: " + singleLineWidth);
-                singleLineWidth /= 1000;
-            Console.WriteLine("singleLineWidth: " + singleLineWidth);
-                //Offset
-                float properB = ((width * 0.0006f) - 0.6f) * 0.5f;
-                Vector3 offset = new Vector3(properB + (((width * singleLineWidth) - singleLineWidth) * 0.5f), 0, 0);
-                Console.WriteLine("proper num: " + properB + " | offset: " + offset.x);
-                startPos -= offset.x < 0? offset*-1 : offset;
-                midPos -= offset.x < 0 ? offset * -1 : offset;
-                endPos -= offset.x < 0 ? offset * -1 : offset;
-            }
-            */
 
-        }
-
-        static void Postfix(ref ObstacleController __instance, ObstacleData obstacleData, Vector3 startPos,
-            Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float startTimeOffset, float singleLineWidth,
+        static void Postfix(ref ObstacleController __instance, ObstacleData obstacleData, float worldRotation, Vector3 startPos,
+            Vector3 midPos, Vector3 endPos, float move1Duration, float move2Duration, float singleLineWidth,
             ref bool ____initialized, ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, ref StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ref SimpleColorSO ____color, ref float height)
         {
             if (!Plugin.active) return;

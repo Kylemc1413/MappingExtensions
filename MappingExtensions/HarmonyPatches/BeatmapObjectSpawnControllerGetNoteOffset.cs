@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harmony;
+using HarmonyLib;
 using UnityEngine;
 
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(BeatmapObjectSpawnController),
+    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData),
 new Type[] {
             typeof(int),
             typeof(NoteLineLayer)
@@ -17,7 +17,7 @@ new Type[] {
     [HarmonyPatch("GetNoteOffset", MethodType.Normal)]
     class BeatmapObjectSpawnControllerGetNoteOffset
     {
-        static void Postfix(BeatmapObjectSpawnController __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, ref float ____noteLinesCount, ref float ____noteLinesDistance)
+        static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, ref float ____noteLinesCount, ref float ____noteLinesDistance, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
             if (noteLineIndex >= 1000 || noteLineIndex <= -1000)
@@ -26,7 +26,7 @@ new Type[] {
                         noteLineIndex += 2000;
                     float num = -(____noteLinesCount - 1f) * 0.5f;
                     num = (num + (((float)noteLineIndex) * (____noteLinesDistance / 1000)));
-                    __result = __instance.transform.right * num + new Vector3(0f, __instance.LineYPosForLineLayer(noteLineLayer), 0f);
+                    __result = ____rightVec * num + new Vector3(0f, __instance.LineYPosForLineLayer(noteLineLayer), 0f);
                     return;
                 }
         }

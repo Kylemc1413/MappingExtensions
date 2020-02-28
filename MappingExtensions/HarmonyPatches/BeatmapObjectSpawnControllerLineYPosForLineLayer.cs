@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harmony;
+using HarmonyLib;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(BeatmapObjectSpawnController),
+    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData),
 new Type[] {
             typeof(NoteLineLayer)})]
     [HarmonyPatch("LineYPosForLineLayer", MethodType.Normal)]

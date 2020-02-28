@@ -7,15 +7,17 @@ using System.Media;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Harmony;
+using HarmonyLib;
 using IPA;
 namespace MappingExtensions
 {
-    public class Plugin : IBeatSaberPlugin
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    public class Plugin
     {
-        public static HarmonyInstance harmony;
+        public static Harmony harmonyInstance;
         internal static bool patched = false;
         internal static bool active;
+        [OnStart]
         public void OnApplicationStart()
         {
 
@@ -23,8 +25,10 @@ namespace MappingExtensions
             SongCore.Collections.RegisterCapability("Mapping Extensions-Precision Placement");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Extra Note Angles");
             SongCore.Collections.RegisterCapability("Mapping Extensions-More Lanes");
-            harmony = HarmonyInstance.Create("com.kyle1413.BeatSaber.MappingExtensions");
+            harmonyInstance = new Harmony("com.kyle1413.BeatSaber.MappingExtensions");
             ApplyPatches();
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         public void OnActiveSceneChanged(Scene oldScene, Scene newScene)
@@ -102,7 +106,7 @@ namespace MappingExtensions
             {
                 if(!patched)
                 {
-                harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
+                    harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
                 patched = true;
                 }
 
@@ -122,7 +126,7 @@ namespace MappingExtensions
             {
                 if(patched)
                 {
-                harmony.UnpatchAll("com.kyle1413.BeatSaber.MappingExtensions");
+                    harmonyInstance.UnpatchAll("com.kyle1413.BeatSaber.MappingExtensions");
                     patched = false;
                 }
 
