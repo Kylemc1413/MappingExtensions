@@ -8,11 +8,7 @@ using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(BeatDataMirrorTransform),
-          new Type[] {
-
-        typeof(BeatmapData),
- })]
+    [HarmonyPatch(typeof(BeatDataMirrorTransform))]
     [HarmonyPatch("CreateTransformedData", MethodType.Normal)]
 
     class BeatDataMirrorTranformCreateTransformedData
@@ -45,8 +41,7 @@ namespace MappingExtensions.Harmony_Patches
                     if (num4 < beatmapObjectsData.Length)
                     {
                         flag = true;
-                        BeatmapObjectData beatmapObjectData = beatmapObjectsData[num4];
-                        float time = beatmapObjectData.time;
+                        float time = beatmapObjectsData[num4].time;
                         if (time < num2)
                         {
                             num2 = time;
@@ -61,17 +56,13 @@ namespace MappingExtensions.Harmony_Patches
                 }
             }
             while (flag);
-            MirrorTransformBeatmapObjects(list, beatmapData.beatmapLinesData.Length);
+            ReflectionUtil.InvokeMethod<object>(typeof(BeatDataMirrorTransform), "MirrorTransformBeatmapObjects", list, beatmapData.beatmapLinesData.Length);
             int[] array2 = new int[beatmapLinesData.Length];
             for (int l = 0; l < list.Count; l++)
             {
-                BeatmapObjectData beatmapObjectData2 = list[l];
-                int number = beatmapObjectData2.lineIndex;
-                if (number > 3)
-                    number = 3;
-                if (number < 0)
-                    number = 0;
-                array2[number]++;
+                BeatmapObjectData beatmapObjectData = list[l];
+                int numC = beatmapObjectData.lineIndex > 3 ? 3 : beatmapObjectData.lineIndex < 0 ? 0 : beatmapObjectData.lineIndex;
+                array2[numC]++;
             }
             BeatmapLineData[] array3 = new BeatmapLineData[beatmapLinesData.Length];
             for (int m = 0; m < beatmapLinesData.Length; m++)
@@ -82,15 +73,10 @@ namespace MappingExtensions.Harmony_Patches
             }
             for (int n = 0; n < list.Count; n++)
             {
-                BeatmapObjectData beatmapObjectData3 = list[n];
-                int lineIndex = beatmapObjectData3.lineIndex;
-                int number = lineIndex;
-                if (number > 3)
-                    number = 3;
-                if (number < 0)
-                    number = 0;
-                array3[number].beatmapObjectsData[array[number]] = beatmapObjectData3;
-                array[number]++;
+                BeatmapObjectData beatmapObjectData2 = list[n];
+                int lineIndex = beatmapObjectData2.lineIndex > 3 ? 3 : beatmapObjectData2.lineIndex < 0 ? 0 : beatmapObjectData2.lineIndex;
+                array3[lineIndex].beatmapObjectsData[array[lineIndex]] = beatmapObjectData2;
+                array[lineIndex]++;
             }
             BeatmapEventData[] array4 = new BeatmapEventData[beatmapData.beatmapEventData.Length];
             for (int num5 = 0; num5 < beatmapData.beatmapEventData.Length; num5++)
@@ -108,63 +94,9 @@ namespace MappingExtensions.Harmony_Patches
             }
             __result = new BeatmapData(array3, array4);
             return false;
-            
 
-            }
-
-        private static float GetRealTimeFromBPMTime(float bmpTime, float beatsPerMinute, float shuffle, float shufflePeriod)
-        {
-            float num = bmpTime;
-            if (shufflePeriod > 0f)
-            {
-                bool flag = (int)(num * (1f / shufflePeriod)) % 2 == 1;
-                if (flag)
-                {
-                    num += shuffle * shufflePeriod;
-                }
-            }
-            if (beatsPerMinute > 0f)
-            {
-                num = num / beatsPerMinute * 60f;
-            }
-            return num;
         }
 
-
-        private static void ProcessBasicNotesInTimeRow(List<NoteData> notes, float nextRowTime)
-        {
-            if (notes.Count == 2)
-            {
-                NoteData noteData = notes[0];
-                NoteData noteData2 = notes[1];
-                if (noteData.noteType != noteData2.noteType && ((noteData.noteType == NoteType.NoteA && noteData.lineIndex > noteData2.lineIndex) || (noteData.noteType == NoteType.NoteB && noteData.lineIndex < noteData2.lineIndex)))
-                {
-                    noteData.SetNoteFlipToNote(noteData2);
-                    noteData2.SetNoteFlipToNote(noteData);
-                }
-            }
-            for (int i = 0; i < notes.Count; i++)
-            {
-                notes[i].timeToNextBasicNote = nextRowTime - notes[i].time;
-            }
-        }
-        private static void MirrorTransformBeatmapObjects(List<BeatmapObjectData> beatmapObjects, int beatmapLineCount)
-        {
-            for (int i = 0; i < beatmapObjects.Count; i++)
-            {
-                BeatmapObjectData beatmapObjectData = beatmapObjects[i];
-                beatmapObjectData.MirrorLineIndex(beatmapLineCount);
-                if (beatmapObjectData.beatmapObjectType == BeatmapObjectType.Note)
-                {
-                    NoteData noteData = beatmapObjectData as NoteData;
-                    if (noteData != null)
-                    {
-                        noteData.SwitchNoteType();
-                        noteData.MirrorTransformCutDirection();
-                    }
-                }
-            }
-        }
     }
 
 

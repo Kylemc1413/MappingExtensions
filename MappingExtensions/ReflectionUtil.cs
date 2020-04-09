@@ -46,7 +46,12 @@ namespace MappingExtensions
                 .GetProperty(propertyName, _allBindingFlags)
                 .SetValue(obj, value, null);
         }
-
+        public static void SetProperty<T>(this object obj, string propertyName, object value)
+        {
+            typeof(T)
+                .GetProperty(propertyName, _allBindingFlags)
+                .SetValue(obj, value, null);
+        }
         //Gets the value of a (static?) Property specified by the object "obj" and the name "propertyName"
         public static object GetProperty(this object obj, string propertyName)
         {

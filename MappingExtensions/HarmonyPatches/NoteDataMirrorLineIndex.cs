@@ -24,7 +24,6 @@ new Type[] {
             if (!Plugin.active) return;
             int lineIndex = int.Parse(__state.Split(';')[0]);
             int flipLineIndex = int.Parse(__state.Split(';')[1]);
-
             if (lineIndex > 3 || lineIndex < 0)
             {
                 if (lineIndex >= 1000 || lineIndex <= -1000)
@@ -43,20 +42,20 @@ new Type[] {
                     newIndex = 5000 - newIndex;
                     if (leftSide)
                         newIndex -= 2000;
-                    __instance.SetProperty("lineIndex", newIndex);
+                    __instance.SetProperty<NoteData>("lineIndex", newIndex);
                 }
                 else if (lineIndex > 3)
                 {
                     int diff = ((lineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - lineIndex);
+                    __instance.SetProperty<NoteData>("lineIndex", newlaneCount - diff - 1 - lineIndex);
 
                 }
                 else if (lineIndex < 0)
                 {
                     int diff = ((0 - lineIndex) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("lineIndex", newlaneCount - diff - 1 - lineIndex);
+                    __instance.SetProperty<NoteData>("lineIndex", newlaneCount - diff - 1 - lineIndex);
                 }
             }
             if (flipLineIndex > 3 || flipLineIndex < 0)
@@ -78,21 +77,21 @@ new Type[] {
                     if (leftSide)
                         newIndex -= 2000;
 
-                    __instance.SetProperty("flipLineIndex", newIndex);
+                    __instance.SetProperty<NoteData>("flipLineIndex", newIndex);
                 }
 
                 else if (flipLineIndex > 3)
                 {
                     int diff = ((flipLineIndex - 3) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
+                    __instance.SetProperty<NoteData>("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
 
                 }
                 else if (flipLineIndex < 0)
                 {
                     int diff = ((0 - flipLineIndex) * 2);
                     int newlaneCount = 4 + diff;
-                    __instance.SetProperty("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
+                    __instance.SetProperty<NoteData>("flipLineIndex", newlaneCount - diff - 1 - flipLineIndex);
                 }
             }
 

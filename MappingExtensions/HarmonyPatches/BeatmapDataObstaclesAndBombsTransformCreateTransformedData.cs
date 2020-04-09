@@ -8,13 +8,7 @@ using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(BeatmapDataObstaclesAndBombsTransform),
-          new Type[] {
-
-        typeof(BeatmapData),
-                typeof(GameplayModifiers.EnabledObstacleType),
-                typeof(bool)
- })]
+    [HarmonyPatch(typeof(BeatmapDataObstaclesAndBombsTransform))]
     [HarmonyPatch("CreateTransformedData", MethodType.Normal)]
 
     class BeatmapDataObstaclesAndBombsTransformCreateTransformedData
@@ -46,8 +40,7 @@ namespace MappingExtensions.Harmony_Patches
                     if (num4 < beatmapObjectsData.Length)
                     {
                         flag = true;
-                        BeatmapObjectData beatmapObjectData = beatmapObjectsData[num4];
-                        float time = beatmapObjectData.time;
+                        float time = beatmapObjectsData[num4].time;
                         if (time < num2)
                         {
                             num2 = time;
@@ -57,8 +50,7 @@ namespace MappingExtensions.Harmony_Patches
                 }
                 if (flag)
                 {
-                    BeatmapObjectData beatmapObjectData2 = beatmapLinesData[num3].beatmapObjectsData[array[num3]];
-                    if (ShouldUseBeatmapObject(beatmapObjectData2, enabledObstaclesType, noBombs))
+                    if (ReflectionUtil.InvokeMethod<bool>(typeof(BeatmapDataObstaclesAndBombsTransform), "ShouldUseBeatmapObject", beatmapLinesData[num3].beatmapObjectsData[array[num3]], enabledObstaclesType, noBombs))
                     {
                         list.Add(beatmapLinesData[num3].beatmapObjectsData[array[num3]].GetCopy());
                     }
@@ -69,13 +61,9 @@ namespace MappingExtensions.Harmony_Patches
             int[] array2 = new int[beatmapLinesData.Length];
             for (int l = 0; l < list.Count; l++)
             {
-                BeatmapObjectData beatmapObjectData3 = list[l];
-                int number = beatmapObjectData3.lineIndex;
-                if (number > 3)
-                    number = 3;
-                if (number < 0)
-                    number = 0;
-                array2[number]++;
+                BeatmapObjectData beatmapObjectData = list[l];
+                int numC = beatmapObjectData.lineIndex > 3 ? 3 : beatmapObjectData.lineIndex < 0 ? 0 : beatmapObjectData.lineIndex;
+                array2[numC]++;
             }
             BeatmapLineData[] array3 = new BeatmapLineData[beatmapLinesData.Length];
             for (int m = 0; m < beatmapLinesData.Length; m++)
@@ -86,27 +74,20 @@ namespace MappingExtensions.Harmony_Patches
             }
             for (int n = 0; n < list.Count; n++)
             {
-                BeatmapObjectData beatmapObjectData4 = list[n];
-                int lineIndex = beatmapObjectData4.lineIndex;
-                int number = lineIndex;
-                if (number > 3)
-                    number = 3;
-                if (number < 0)
-                    number = 0;
-                array3[number].beatmapObjectsData[array[number]] = beatmapObjectData4;
-                array[number]++;
+                BeatmapObjectData beatmapObjectData2 = list[n];
+                int lineIndex = beatmapObjectData2.lineIndex > 3 ? 3 : beatmapObjectData2.lineIndex < 0 ? 0 : beatmapObjectData2.lineIndex;
+                array3[lineIndex].beatmapObjectsData[array[lineIndex]] = beatmapObjectData2;
+                array[lineIndex]++;
             }
             BeatmapEventData[] array4 = new BeatmapEventData[beatmapData.beatmapEventData.Length];
             for (int num5 = 0; num5 < beatmapData.beatmapEventData.Length; num5++)
             {
                 BeatmapEventData beatmapEventData = beatmapData.beatmapEventData[num5];
-                array4[num5] = new BeatmapEventData(beatmapEventData.time, beatmapEventData.type, beatmapEventData.value);
+                array4[num5] = beatmapEventData;
             }
             __result = new BeatmapData(array3, array4);
             return false;
-            
-
-            }
+        }
 
         private static float GetRealTimeFromBPMTime(float bmpTime, float beatsPerMinute, float shuffle, float shufflePeriod)
         {

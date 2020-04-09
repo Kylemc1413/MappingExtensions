@@ -27,7 +27,7 @@ new Type[] {
             {
                 int cutdir = (int)__state;
                 int newdir = 2360 - cutdir;
-                __instance.SetProperty("cutDirection", (NoteCutDirection)newdir);
+                __instance.SetProperty<NoteData>("cutDirection", (NoteCutDirection)newdir);
             }
 
         }

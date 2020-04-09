@@ -85,7 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HarmonyPatches\BeatDataMirrorTranformCreateTransformedData.cs" />
-    <Compile Include="HarmonyPatches\BeatmapDataClearNotesBeforeStartTimeTransformCreateTransformedData.cs" />
     <Compile Include="HarmonyPatches\BeatmapDataObstaclesAndBombsTransformCreateTransformedData.cs" />
     <Compile Include="HarmonyPatches\BeatmapObjectDataMirrorLineIndex.cs" />
     <Compile Include="HarmonyPatches\BeatmapObjectSpawnControllerGetNoteOffset.cs" />
