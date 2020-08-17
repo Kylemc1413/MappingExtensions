@@ -96,6 +96,7 @@
     <Compile Include="HarmonyPatches\NoteDataMirrorLineIndex.cs" />
     <Compile Include="HarmonyPatches\NoteDataMirrorTransformCutDirection.cs" />
     <Compile Include="HarmonyPatches\ObstacleDataMirrorLineIndex.cs" />
+    <Compile Include="HarmonyPatches\BeatmapObjectSpawnMovementDataGet2DNoteOffset.cs" />
     <Compile Include="HarmonyPatches\SpawnRotationProcessorRotationForEventValue.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

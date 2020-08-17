@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
+using System.Reflection.Emit;
+using System.Reflection;
 namespace MappingExtensions.Harmony_Patches
 {
 
@@ -13,90 +15,35 @@ namespace MappingExtensions.Harmony_Patches
 
     class BeatDataMirrorTranformCreateTransformedData
     {
-        static bool Prefix(BeatmapData beatmapData, ref BeatmapData __result)
-        {
+        static readonly MethodInfo clampMethod = SymbolExtensions.GetMethodInfo(() => Clamp(0, 0, 0));
+        static readonly CodeInstruction[] clampInstructions = new CodeInstruction[] { new CodeInstruction(OpCodes.Ldc_I4_0),
+            new CodeInstruction(OpCodes.Ldc_I4_3), new CodeInstruction(OpCodes.Call, clampMethod) };
 
-            BeatmapLineData[] beatmapLinesData = beatmapData.beatmapLinesData;
-            int[] array = new int[beatmapLinesData.Length];
-            for (int i = 0; i < array.Length; i++)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            List<CodeInstruction> instructionList = instructions.ToList();
+
+            for (int i = 0; i < instructionList.Count; i++)
             {
-                array[i] = 0;
-            }
-            int num = 0;
-            for (int j = 0; j < beatmapLinesData.Length; j++)
-            {
-                num += beatmapLinesData[j].beatmapObjectsData.Length;
-            }
-            List<BeatmapObjectData> list = new List<BeatmapObjectData>(num);
-            bool flag;
-            do
-            {
-                flag = false;
-                float num2 = 999999f;
-                int num3 = 0;
-                for (int k = 0; k < beatmapLinesData.Length; k++)
+                if (instructionList[i].opcode == OpCodes.Callvirt)
                 {
-                    BeatmapObjectData[] beatmapObjectsData = beatmapLinesData[k].beatmapObjectsData;
-                    int num4 = array[k];
-                    if (num4 < beatmapObjectsData.Length)
+                    var method = (MethodInfo)(instructionList[i].operand);
+                    if (method.Name == "get_lineIndex")
                     {
-                        flag = true;
-                        float time = beatmapObjectsData[num4].time;
-                        if (time < num2)
-                        {
-                            num2 = time;
-                            num3 = k;
-                        }
+                        instructionList.InsertRange(i + 1, clampInstructions);
+                        i += clampInstructions.Count();
                     }
                 }
-                if (flag)
-                {
-                    list.Add(beatmapLinesData[num3].beatmapObjectsData[array[num3]].GetCopy());
-                    array[num3]++;
-                }
-            }
-            while (flag);
-            ReflectionUtil.InvokeMethod<object>(typeof(BeatDataMirrorTransform), "MirrorTransformBeatmapObjects", list, beatmapData.beatmapLinesData.Length);
-            int[] array2 = new int[beatmapLinesData.Length];
-            for (int l = 0; l < list.Count; l++)
-            {
-                BeatmapObjectData beatmapObjectData = list[l];
-                int numC = beatmapObjectData.lineIndex > 3 ? 3 : beatmapObjectData.lineIndex < 0 ? 0 : beatmapObjectData.lineIndex;
-                array2[numC]++;
-            }
-            BeatmapLineData[] array3 = new BeatmapLineData[beatmapLinesData.Length];
-            for (int m = 0; m < beatmapLinesData.Length; m++)
-            {
-                array3[m] = new BeatmapLineData();
-                array3[m].beatmapObjectsData = new BeatmapObjectData[array2[m]];
-                array[m] = 0;
-            }
-            for (int n = 0; n < list.Count; n++)
-            {
-                BeatmapObjectData beatmapObjectData2 = list[n];
-                int lineIndex = beatmapObjectData2.lineIndex > 3 ? 3 : beatmapObjectData2.lineIndex < 0 ? 0 : beatmapObjectData2.lineIndex;
-                array3[lineIndex].beatmapObjectsData[array[lineIndex]] = beatmapObjectData2;
-                array[lineIndex]++;
-            }
-            BeatmapEventData[] array4 = new BeatmapEventData[beatmapData.beatmapEventData.Length];
-            for (int num5 = 0; num5 < beatmapData.beatmapEventData.Length; num5++)
-            {
-                BeatmapEventData beatmapEventData = beatmapData.beatmapEventData[num5];
-                if (beatmapEventData.type.IsRotationEvent())
-                {
-                    int value = 7 - beatmapEventData.value;
-                    array4[num5] = new BeatmapEventData(beatmapEventData.time, beatmapEventData.type, value);
-                }
-                else
-                {
-                    array4[num5] = beatmapEventData;
-                }
-            }
-            __result = new BeatmapData(array3, array4);
-            return false;
 
+            }
+
+            return instructionList.AsEnumerable();
         }
+        static int Clamp(int input, int min, int max)
+        {
 
+            return Math.Min(Math.Max(input, min), max);
+        }
     }
 
 
