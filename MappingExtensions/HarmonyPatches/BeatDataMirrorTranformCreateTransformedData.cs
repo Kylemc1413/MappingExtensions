@@ -9,8 +9,8 @@ using System.Reflection.Emit;
 using System.Reflection;
 namespace MappingExtensions.Harmony_Patches
 {
-
-    [HarmonyPatch(typeof(BeatDataMirrorTransform))]
+    /*
+    [HarmonyPatch(typeof(BeatmapDataMirrorTransform))]
     [HarmonyPatch("CreateTransformedData", MethodType.Normal)]
 
     class BeatDataMirrorTranformCreateTransformedData
@@ -45,6 +45,6 @@ namespace MappingExtensions.Harmony_Patches
             return Math.Min(Math.Max(input, min), max);
         }
     }
-
+    */
 
 }

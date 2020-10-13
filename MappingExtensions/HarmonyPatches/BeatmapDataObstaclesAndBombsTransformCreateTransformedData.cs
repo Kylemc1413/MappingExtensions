@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 namespace MappingExtensions.Harmony_Patches
 {
-
+    /*
     [HarmonyPatch(typeof(BeatmapDataObstaclesAndBombsTransform))]
     [HarmonyPatch("CreateTransformedData", MethodType.Normal)]
 
@@ -46,6 +46,6 @@ namespace MappingExtensions.Harmony_Patches
             return Math.Min(Math.Max(input, min), max);
         }
     }
-
+    */
 
 }

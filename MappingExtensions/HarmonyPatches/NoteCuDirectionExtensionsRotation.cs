@@ -9,10 +9,7 @@ using UnityEngine;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(NoteCutDirectionExtensions),
-new Type[] {
-            typeof(NoteCutDirection)
-})]
+    [HarmonyPatch(typeof(NoteCutDirectionExtensions))]
     [HarmonyPatch("Rotation", MethodType.Normal)]
     class NoteCuDirectionExtensionsRotation
     {
