@@ -50,6 +50,11 @@ namespace MappingExtensions
         }
         void CheckActivation()
         {
+            if(!BS_Utils.Plugin.LevelData.IsSet)
+            {
+                active = false;
+                return;
+            }    
             var diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
             var songData = SongCore.Collections.RetrieveDifficultyData(diff);
             if (songData != null)
