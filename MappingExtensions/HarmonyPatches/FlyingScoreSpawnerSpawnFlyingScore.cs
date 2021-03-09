@@ -12,7 +12,7 @@ namespace MappingExtensions.Harmony_Patches
 
     class FlyingScoreSpawnerSpawnFlyingScore
     {
-        static void Prefix(NoteCutInfo noteCutInfo, ref int noteLineIndex, int multiplier, Vector3 pos, Color color)
+        static void Prefix(in NoteCutInfo noteCutInfo, ref int noteLineIndex, int multiplier, Vector3 pos, Color color)
         {
             if (!Plugin.active) return;
             if (noteLineIndex < 0)

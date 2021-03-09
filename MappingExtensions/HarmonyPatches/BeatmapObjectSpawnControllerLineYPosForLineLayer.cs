@@ -21,22 +21,16 @@ new Type[] {
             if ((int)lineLayer >= 1000 || (int)lineLayer <= -1000)
             {
                 __result = ____upperLinesYPos - delta - delta + (((int)lineLayer) * (delta / 1000f));
-
-                return;
             }
-
-            if ((int)lineLayer > 2)
+            else if ((int)lineLayer > 2)
             {
-
                 __result = ____upperLinesYPos - delta + ((int)lineLayer * delta);
-                return;
             }
-
-            if ((int)lineLayer < 0)
+            else if ((int)lineLayer < 0)
             {
-                __result = ____upperLinesYPos - delta  + ((int)lineLayer * delta);
-                return;
+                __result = ____upperLinesYPos - delta + ((int)lineLayer * delta);
             }
+       //     Plugin.log.Info($"LineYPos Layer {(int)lineLayer} Final Result {__result}");
 
         }
 

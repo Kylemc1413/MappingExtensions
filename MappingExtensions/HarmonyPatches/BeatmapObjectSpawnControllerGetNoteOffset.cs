@@ -27,8 +27,9 @@ new Type[] {
                     float num = -(____noteLinesCount - 1f) * 0.5f;
                     num = (num + (((float)noteLineIndex) * (____noteLinesDistance / 1000)));
                     __result = ____rightVec * num + new Vector3(0f, __instance.LineYPosForLineLayer(noteLineLayer), 0f);
-                    return;
                 }
+          //  Plugin.log.Info($"NoteOffset Index {noteLineIndex} Layer {(int)noteLineLayer} Final Result {__result}");
+
         }
 
 

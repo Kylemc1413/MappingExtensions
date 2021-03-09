@@ -13,7 +13,7 @@ new Type[] {
     [HarmonyPatch("HighestJumpPosYForLineLayer", MethodType.Normal)]
     class BeatmapObjectSpawnControllerHighestJumpPosYForLineLayer
     {
-        static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesHighestJumpPosY, ref float ____jumpOffsetY, ref float ____upperLinesHighestJumpPosY)
+        static void Postfix(NoteLineLayer lineLayer, ref float __result, ref float ____topLinesHighestJumpPosY, ref float ____jumpOffsetY, ref float ____upperLinesHighestJumpPosY, ref float ____baseLinesHighestJumpPosY)
         {
             if (!Plugin.active) return;
             float delta = (____topLinesHighestJumpPosY - ____upperLinesHighestJumpPosY);
@@ -22,21 +22,21 @@ new Type[] {
             {
                 __result = ____upperLinesHighestJumpPosY - delta - delta + ____jumpOffsetY + (((int)lineLayer) * (delta / 1000f));
 
-                return;
             }
 
-            if ((int)lineLayer > 2)
+            else if ((int)lineLayer > 2)
             {
 
                 __result = ____upperLinesHighestJumpPosY - delta + ____jumpOffsetY + ((int)lineLayer * delta);
-                return;
+
             }
 
-            if ((int)lineLayer < 0)
+            else if ((int)lineLayer < 0)
             {
                 __result = ____upperLinesHighestJumpPosY - delta + ____jumpOffsetY + ((int)lineLayer * delta);
-                return;
+
             }
+          //  Plugin.log.Info($"HighestJumpPosY Layer {(int)lineLayer} Final Result {__result}");
 
         }
 

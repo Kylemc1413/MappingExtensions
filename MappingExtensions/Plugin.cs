@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using HarmonyLib;
 using IPA;
+using IPALogger = IPA.Logging.Logger;
 namespace MappingExtensions
 {
     [Plugin(RuntimeOptions.SingleStartInit)]
@@ -17,6 +18,12 @@ namespace MappingExtensions
         public static Harmony harmonyInstance;
         internal static bool patched = false;
         internal static bool active;
+        public static IPALogger log { get; set; }
+        [Init]
+        public Plugin(IPALogger logger)
+        {
+            log = logger;
+        }
         [OnStart]
         public void OnApplicationStart()
         {
