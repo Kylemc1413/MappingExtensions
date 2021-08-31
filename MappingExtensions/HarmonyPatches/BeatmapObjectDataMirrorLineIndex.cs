@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 namespace MappingExtensions.Harmony_Patches
 {
-
+    /*
     [HarmonyPatch(typeof(BeatmapObjectData),
 new Type[] {
             typeof(int)})]
@@ -60,4 +60,5 @@ new Type[] {
         }
 
     }
+    */
 }

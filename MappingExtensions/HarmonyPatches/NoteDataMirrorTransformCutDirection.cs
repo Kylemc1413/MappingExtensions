@@ -7,27 +7,24 @@ using HarmonyLib;
 namespace MappingExtensions.Harmony_Patches
 {
 
-    [HarmonyPatch(typeof(NoteData),
-new Type[] {
-            })]
-    [HarmonyPatch("MirrorTransformCutDirection", MethodType.Normal)]
+    [HarmonyPatch(typeof(NoteCutDirectionExtensions))]
+    [HarmonyPatch("Mirrored", MethodType.Normal)]
     class NoteDataMirrorTransformCutDirection
     { 
-        static void Prefix(ref NoteData __instance, ref NoteCutDirection __state)
+        static void Prefix(ref NoteCutDirection cutDirection, ref NoteCutDirection __state)
         {
-            __state = __instance.cutDirection;
+            __state = cutDirection;
             
-          
         }
 
-        static void Postfix(ref NoteData __instance, ref NoteCutDirection __state)
+        static void Postfix(ref NoteCutDirection __result, ref NoteCutDirection __state)
         {
             if (!Plugin.active) return;
             if ((int)__state >= 1000)
             {
                 int cutdir = (int)__state;
                 int newdir = 2360 - cutdir;
-                __instance.SetProperty<NoteData>("cutDirection", (NoteCutDirection)newdir);
+                __result = (NoteCutDirection)newdir;
             }
 
         }

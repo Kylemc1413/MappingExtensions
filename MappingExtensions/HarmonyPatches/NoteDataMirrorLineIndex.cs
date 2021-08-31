@@ -10,7 +10,7 @@ namespace MappingExtensions.Harmony_Patches
     [HarmonyPatch(typeof(NoteData),
 new Type[] {
             typeof(int)})]
-    [HarmonyPatch("MirrorLineIndex", MethodType.Normal)]
+    [HarmonyPatch("Mirror", MethodType.Normal)]
     class NoteDataMirrorLineIndex
     {
         static void Prefix(int lineCount, ref NoteData __instance, ref string __state)

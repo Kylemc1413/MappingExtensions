@@ -10,7 +10,7 @@ namespace MappingExtensions.Harmony_Patches
     [HarmonyPatch(typeof(ObstacleData),
 new Type[] {
             typeof(int)})]
-    [HarmonyPatch("MirrorLineIndex", MethodType.Normal)]
+    [HarmonyPatch("Mirror", MethodType.Normal)]
     class ObstacleDataMirrorLineIndex
     {
         static void Prefix(int lineCount, ref ObstacleData __instance, ref int __state)
