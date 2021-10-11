@@ -13,7 +13,7 @@ namespace MappingExtensions.HarmonyPatches
         static void Postfix(int index, ref float __result)
         {
             if (!Plugin.active) return;
-            if (!BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.requires360Movement) return;
+            if (BS_Utils.Plugin.LevelData.IsSet && !BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.requires360Movement) return;
             if (index >= 1000 && index <= 1720)
                 __result = index - 1360;
         }
