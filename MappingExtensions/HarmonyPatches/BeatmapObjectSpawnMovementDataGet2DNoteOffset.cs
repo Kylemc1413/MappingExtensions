@@ -11,7 +11,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch("Get2DNoteOffset", MethodType.Normal)]
     class BeatmapObjectSpawnMovementDataGet2DNoteOffset
     {
-        static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector2 __result, ref BeatmapObjectSpawnMovementData __instance, float ____noteLinesCount, float ____noteLinesDistance)
+        static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector2 __result, ref BeatmapObjectSpawnMovementData __instance, int ____noteLinesCount, float ____noteLinesDistance)
         {
             if (!Plugin.active) return;
             float x, y = 0;
