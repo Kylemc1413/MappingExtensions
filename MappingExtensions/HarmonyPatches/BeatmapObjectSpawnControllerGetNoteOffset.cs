@@ -17,7 +17,7 @@ new Type[] {
     [HarmonyPatch("GetNoteOffset", MethodType.Normal)]
     class BeatmapObjectSpawnControllerGetNoteOffset
     {
-        static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, ref float ____noteLinesCount, ref float ____noteLinesDistance, Vector3 ____rightVec)
+        static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, ref int ____noteLinesCount, ref float ____noteLinesDistance, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
             if (noteLineIndex >= 1000 || noteLineIndex <= -1000)
