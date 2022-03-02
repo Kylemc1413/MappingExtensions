@@ -6,7 +6,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetNoteOffset))]
     internal class BeatmapObjectSpawnMovementDataGetNoteOffset
     {
-        private static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, int ____noteLinesCount, float ____noteLinesDistance, Vector3 ____rightVec)
+        private static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, int ____noteLinesCount, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
             if (noteLineIndex is >= 1000 or <= -1000)
@@ -14,8 +14,8 @@ namespace MappingExtensions.HarmonyPatches
                 if (noteLineIndex <= -1000)
                     noteLineIndex += 2000;
                 float num = -(____noteLinesCount - 1f) * 0.5f;
-                num += noteLineIndex * (____noteLinesDistance / 1000);
-                __result = ____rightVec * num + new Vector3(0f, __instance.LineYPosForLineLayer(noteLineLayer), 0f);
+                num += noteLineIndex * (StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000);
+                __result = ____rightVec * num + new Vector3(0f, StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer), 0f);
             }
         }
     }
@@ -23,7 +23,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.Get2DNoteOffset))]
     internal class BeatmapObjectSpawnMovementDataGet2DNoteOffset
     {
-        private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector2 __result, BeatmapObjectSpawnMovementData __instance, int ____noteLinesCount, float ____noteLinesDistance)
+        private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector2 __result, int ____noteLinesCount)
         {
             if (!Plugin.active) return;
             if (noteLineIndex is >= 1000 or <= -1000)
@@ -31,9 +31,27 @@ namespace MappingExtensions.HarmonyPatches
                 if (noteLineIndex <= -1000)
                     noteLineIndex += 2000;
                 float num = -(____noteLinesCount - 1f) * 0.5f;
-                float x = num + noteLineIndex * (____noteLinesDistance / 1000);
-                float y = __instance.LineYPosForLineLayer(noteLineLayer);
+                float x = num + noteLineIndex * (StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000);
+                float y = StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer);
                 __result = new Vector2(x, y);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetObstacleOffset))]
+    internal class BeatmapObjectSpawnControllerGetObstacleOffset
+    {
+        private static void Postfix(int noteLineIndex, ref Vector3 __result,  int ____noteLinesCount, Vector3 ____rightVec)
+        {
+            if (!Plugin.active) return;
+            if (noteLineIndex >= 1000 || noteLineIndex <= -1000)
+            {
+                if (noteLineIndex <= -1000)
+                    noteLineIndex += 2000;
+                float num = -(____noteLinesCount - 1f) * 0.5f;
+                num += noteLineIndex * (StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000);
+                // TODO: Look if we can use the new lineLayer logic (and - 0.15f) instead of using NoteLineLayer.Base.
+                __result = ____rightVec * num + new Vector3(0f, StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(NoteLineLayer.Base), 0f);
             }
         }
     }
@@ -41,7 +59,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.HighestJumpPosYForLineLayer))]
     internal class BeatmapObjectSpawnMovementDataHighestJumpPosYForLineLayer
     {
-        private static void Postfix(NoteLineLayer lineLayer, ref float __result, float ____topLinesHighestJumpPosY, float ____jumpOffsetY, float ____upperLinesHighestJumpPosY)
+        private static void Postfix(NoteLineLayer lineLayer, ref float __result, float ____topLinesHighestJumpPosY, IJumpOffsetYProvider ____jumpOffsetYProvider, float ____upperLinesHighestJumpPosY)
         {
             if (!Plugin.active) return;
             float delta = ____topLinesHighestJumpPosY - ____upperLinesHighestJumpPosY;
@@ -49,32 +67,11 @@ namespace MappingExtensions.HarmonyPatches
             {
                 case >= 1000:
                 case <= -1000:
-                    __result = ____upperLinesHighestJumpPosY - delta - delta + ____jumpOffsetY + (int)lineLayer * (delta / 1000f);
+                    __result = ____upperLinesHighestJumpPosY - delta - delta + ____jumpOffsetYProvider.jumpOffsetY + (int)lineLayer * (delta / 1000f);
                     break;
                 case > 2:
                 case < 0:
-                    __result = ____upperLinesHighestJumpPosY - delta + ____jumpOffsetY + (int)lineLayer * delta;
-                    break;
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.LineYPosForLineLayer))]
-    internal class BeatmapObjectSpawnMovementDataLineYPosForLineLayer
-    {
-        private static void Postfix(NoteLineLayer lineLayer, ref float __result, float ____topLinesYPos, float ____upperLinesYPos)
-        {
-            if (!Plugin.active) return;
-            float delta = ____topLinesYPos - ____upperLinesYPos;
-            switch ((int)lineLayer)
-            {
-                case >= 1000:
-                case <= -1000:
-                    __result = ____upperLinesYPos - delta - delta + (int)lineLayer * (delta / 1000f);
-                    break;
-                case > 2:
-                case < 0:
-                    __result = ____upperLinesYPos - delta + (int)lineLayer * delta;
+                    __result = ____upperLinesHighestJumpPosY - delta + ____jumpOffsetYProvider.jumpOffsetY + (int)lineLayer * delta;
                     break;
             }
         }

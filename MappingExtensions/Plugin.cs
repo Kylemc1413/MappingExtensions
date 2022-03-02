@@ -8,7 +8,7 @@ using IPALogger = IPA.Logging.Logger;
 
 namespace MappingExtensions
 {
-    [Plugin(RuntimeOptions.SingleStartInit)]
+    [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
         private static Harmony _harmony = null!;
@@ -21,10 +21,9 @@ namespace MappingExtensions
             Log = logger;
         }
         
-        [OnStart]
-        public void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
-            // TODO: Add an API in SongCore to unregister, so it can be compatible with DynamicInit.
             SongCore.Collections.RegisterCapability("Mapping Extensions");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Precision Placement");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Extra Note Angles");
@@ -58,9 +57,13 @@ namespace MappingExtensions
             active = songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions");
         }
 
-        [OnExit]
-        public void OnApplicationQuit()
+        [OnDisable]
+        public void OnDisable()
         {
+            SongCore.Collections.DeregisterizeCapability("Mapping Extensions");
+            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-Precision Placement");
+            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-Extra Note Angles");
+            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-More Lanes");
             _harmony.UnpatchSelf();
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }

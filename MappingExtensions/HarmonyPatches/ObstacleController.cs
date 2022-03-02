@@ -12,21 +12,21 @@ namespace MappingExtensions.HarmonyPatches
              ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ColorManager ____colorManager, ref float height)
         {
             if (!Plugin.active) return;
-            if (obstacleData.width >= 1000 || (int)obstacleData.obstacleType >= 1000 && (int)obstacleData.obstacleType <= 4000 || (int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4005000)
+            if (obstacleData.width >= 1000 || (int)obstacleData.lineLayer >= 1000 && (int)obstacleData.lineLayer <= 4000 || (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4005000)
             {
-                _mode mode = (int)obstacleData.obstacleType >= 4001 && (int)obstacleData.obstacleType <= 4100000 ? _mode.preciseHeightStart : _mode.preciseHeight;
+                _mode mode = (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4100000 ? _mode.preciseHeightStart : _mode.preciseHeight;
                 int obsHeight;
                 var startHeight = 0;
                 if(mode == _mode.preciseHeightStart)
                 {
-                    var value = (int)obstacleData.obstacleType;
+                    var value = (int)obstacleData.lineLayer;
                     value -= 4001;
                     obsHeight = value / 1000;
                     startHeight = value % 1000;
                 }
                 else
                 {
-                    var value = (int)obstacleData.obstacleType;
+                    var value = (int)obstacleData.lineLayer;
                     obsHeight = value - 1000;
                 }
                 float num;
@@ -46,7 +46,7 @@ namespace MappingExtensions.HarmonyPatches
                 float num2 = (____endPos - ____midPos).magnitude / move2Duration;
                 float length = num2 * obstacleData.duration;
                 float multiplier = 1;
-                if ((int)obstacleData.obstacleType >= 1000)
+                if ((int)obstacleData.lineLayer >= 1000)
                     multiplier = obsHeight / 1000f;
                 
                 ____stretchableObstacle.SetSizeAndColor(Mathf.Abs(num * 0.98f),Mathf.Abs(height * multiplier), Mathf.Abs(length), ____colorManager.GetObstacleEffectColor());
