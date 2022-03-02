@@ -1,161 +1,68 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Media;
-using TMPro;
-using UnityEngine;
+﻿using System.Linq;
+using System.Reflection;
 using UnityEngine.SceneManagement;
 using HarmonyLib;
 using IPA;
+using SongCore.Data;
 using IPALogger = IPA.Logging.Logger;
+
 namespace MappingExtensions
 {
     [Plugin(RuntimeOptions.SingleStartInit)]
     public class Plugin
     {
-        public static Harmony harmonyInstance;
-        internal static bool patched = false;
+        private static Harmony _harmony = null!;
+        internal static IPALogger Log { get; set; } = null!;
         internal static bool active;
-        public static IPALogger log { get; set; }
+
         [Init]
         public Plugin(IPALogger logger)
         {
-            log = logger;
+            Log = logger;
         }
+        
         [OnStart]
         public void OnApplicationStart()
         {
-
+            // TODO: Add an API in SongCore to unregister, so it can be compatible with DynamicInit.
             SongCore.Collections.RegisterCapability("Mapping Extensions");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Precision Placement");
             SongCore.Collections.RegisterCapability("Mapping Extensions-Extra Note Angles");
             SongCore.Collections.RegisterCapability("Mapping Extensions-More Lanes");
-            harmonyInstance = new Harmony("com.kyle1413.BeatSaber.MappingExtensions");
-            ApplyPatches();
+            _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "com.kyle1413.BeatSaber.MappingExtensions");
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        public void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+        private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
-       //     Console.WriteLine("Switching to Scene: " + newScene.name + "With handle: " + newScene.handle);
-            if (newScene.name == "MenuCore")
-                active = false;
-            if (newScene.name == "GameCore")
+            switch (newScene.name)
             {
-                CheckActivation();
+                case "MenuCore":
+                    active = false;
+                    break;
+                case "GameCore":
+                    CheckActivation();
+                    break;
             }
-
-
         }
 
-        public static void ForceActivateForSong()
-        {
-            active = true;
-        }
-        void CheckActivation()
+        private static void CheckActivation()
         {
             if(!BS_Utils.Plugin.LevelData.IsSet)
             {
                 active = false;
                 return;
             }    
-            var diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
-            var songData = SongCore.Collections.RetrieveDifficultyData(diff);
-            if (songData != null)
-            {
-                if (songData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
-                {
-        //            Console.WriteLine("Active");
-                    active = true;
-                }
-                else
-                {
-                    active = false;
-        //            Console.WriteLine("InActive");
-                }
-
-            }
-            else
-            {
-        //        Console.WriteLine("Null Data");
-                active = false;
-            }
-
-        }
-        public void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
-        {
-
-
+            IDifficultyBeatmap? diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
+            ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(diff);
+            active = songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions");
         }
 
+        [OnExit]
         public void OnApplicationQuit()
         {
-
-        }
-
-        public void OnLevelWasLoaded(int level)
-        {
-
-        }
-
-        public void OnLevelWasInitialized(int level)
-        {
-        }
-
-        public void OnUpdate()
-        {
-
-
-        }
-
-        internal static void ApplyPatches()
-        {
-     //       Console.WriteLine("Patching");
-            try
-            {
-                if(!patched)
-                {
-                    harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
-                patched = true;
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-
-        }
-
-        internal static void RemovePatches()
-        {
-       //     Console.WriteLine("UnPatching");
-            try
-            {
-                if(patched)
-                {
-                    harmonyInstance.UnpatchAll("com.kyle1413.BeatSaber.MappingExtensions");
-                    patched = false;
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-        public void OnFixedUpdate()
-        {
-        }
-
-        public void OnSceneUnloaded(Scene scene)
-        {
-
+            _harmony.UnpatchSelf();
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
     }
 }
