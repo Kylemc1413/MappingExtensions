@@ -34,7 +34,7 @@ namespace MappingExtensions.HarmonyPatches
                         newIndex = 5000 - newIndex;
                         if (leftSide)
                             newIndex -= 2000;
-                        
+
                         __instance.SetProperty("lineIndex", newIndex);
                         break;
                     }
@@ -68,7 +68,7 @@ namespace MappingExtensions.HarmonyPatches
 
                         if (newIndex >= 4000)
                             leftSide = true;
-                        
+
                         newIndex = 5000 - newIndex;
                         if (leftSide)
                             newIndex -= 2000;

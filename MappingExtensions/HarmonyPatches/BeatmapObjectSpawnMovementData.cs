@@ -19,7 +19,7 @@ namespace MappingExtensions.HarmonyPatches
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.Get2DNoteOffset))]
     internal class BeatmapObjectSpawnMovementDataGet2DNoteOffset
     {

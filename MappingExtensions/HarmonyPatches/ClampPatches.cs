@@ -46,7 +46,7 @@ namespace MappingExtensions.HarmonyPatches
                     {
                         list.Insert(i, noteData);
                         flag = true;
-                        break; 
+                        break;
                     }
                 }
                 if (!flag)

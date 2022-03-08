@@ -83,7 +83,7 @@ namespace MappingExtensions.HarmonyPatches
 
     [HarmonyPatch(typeof(NoteCutDirectionExtensions), nameof(NoteCutDirectionExtensions.Mirrored))]
     internal class NoteCutDirectionExtensionsMirrored
-    { 
+    {
         private static void Prefix(NoteCutDirection cutDirection, out NoteCutDirection __state)
         {
             __state = cutDirection;

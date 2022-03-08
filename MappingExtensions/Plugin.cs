@@ -20,7 +20,7 @@ namespace MappingExtensions
         {
             Log = logger;
         }
-        
+
         [OnEnable]
         public void OnEnable()
         {
@@ -51,7 +51,7 @@ namespace MappingExtensions
             {
                 active = false;
                 return;
-            }    
+            }
             IDifficultyBeatmap? diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
             ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(diff);
             active = songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions");
