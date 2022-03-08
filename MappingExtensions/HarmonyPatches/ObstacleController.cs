@@ -6,7 +6,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(ObstacleController), nameof(ObstacleController.Init))]
     internal class ObstacleControllerInit
     {
-        private enum _mode { preciseHeight, preciseHeightStart };
+        private enum Mode { preciseHeight, preciseHeightStart };
 
         private static void Postfix(ObstacleData obstacleData, Vector3 startPos, Vector3 midPos, Vector3 endPos, float move2Duration, float singleLineWidth, 
              ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ColorManager ____colorManager, ref float height)
@@ -14,10 +14,10 @@ namespace MappingExtensions.HarmonyPatches
             if (!Plugin.active) return;
             if (obstacleData.width >= 1000 || (int)obstacleData.lineLayer >= 1000 && (int)obstacleData.lineLayer <= 4000 || (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4005000)
             {
-                _mode mode = (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4100000 ? _mode.preciseHeightStart : _mode.preciseHeight;
+                Mode mode = (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4100000 ? Mode.preciseHeightStart : Mode.preciseHeight;
                 int obsHeight;
                 var startHeight = 0;
-                if(mode == _mode.preciseHeightStart)
+                if(mode == Mode.preciseHeightStart)
                 {
                     var value = (int)obstacleData.lineLayer;
                     value -= 4001;
@@ -30,7 +30,7 @@ namespace MappingExtensions.HarmonyPatches
                     obsHeight = value - 1000;
                 }
                 float num;
-                if (obstacleData.width >= 1000 || mode == _mode.preciseHeightStart)
+                if (obstacleData.width >= 1000 || mode == Mode.preciseHeightStart)
                 {
                     float width = (float)obstacleData.width - 1000;
                     float precisionLineWidth = singleLineWidth / 1000;

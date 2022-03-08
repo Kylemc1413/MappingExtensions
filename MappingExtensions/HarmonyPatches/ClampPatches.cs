@@ -71,8 +71,7 @@ namespace MappingExtensions.HarmonyPatches
                         sliderData.SetHeadBeforeJumpLineLayer(noteData2.beforeJumpNoteLineLayer);
                         if (sliderData.sliderType == SliderData.Type.Burst)
                         {
-                            BurstSliderCutDirection burstSliderCutDirection = BurstSliderCutDirectionExtensions.FromHeadAndTailLineLayer(sliderData.headLineLayer, sliderData.tailLineLayer);
-                            noteData2.ChangeToBurstSliderHead(burstSliderCutDirection);
+                            noteData2.ChangeToBurstSliderHead();
                             if (noteData2.cutDirection == sliderData.tailCutDirection)
                             {
                                 Vector2 line = StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset(noteData2.lineIndex, ____numberOfLines, noteData2.noteLineLayer) - StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset(sliderData.tailLineIndex, ____numberOfLines, sliderData.tailLineLayer);
