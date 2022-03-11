@@ -16,6 +16,7 @@ namespace MappingExtensions.HarmonyPatches
                 .MatchForward(true, new CodeMatch(OpCodes.Ldloc_S),
                     new CodeMatch(OpCodes.Callvirt),
                     new CodeMatch(OpCodes.Ldelem_Ref))
+                .ThrowIfInvalid("Couldn't match insert condition")
                 .Insert(new CodeInstruction(OpCodes.Ldc_I4_0),
                     new CodeInstruction(OpCodes.Ldc_I4_3),
                     new CodeInstruction(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => Clamp(0, 0, 0))))
