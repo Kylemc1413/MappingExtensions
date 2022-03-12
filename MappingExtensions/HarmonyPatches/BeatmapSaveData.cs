@@ -20,7 +20,7 @@ namespace MappingExtensions.HarmonyPatches
     {
         private static void Postfix(BeatmapSaveDataVersion2_6_0AndEarlier.BeatmapSaveData.ObstacleType obstacleType, ref int __result)
         {
-            if ((int)obstacleType > 3 || (int)obstacleType < 0)
+            if ((int)obstacleType > 2 || (int)obstacleType < 0)
                 __result = (int)obstacleType;
         }
     }
