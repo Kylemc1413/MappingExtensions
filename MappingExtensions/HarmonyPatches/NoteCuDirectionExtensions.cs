@@ -39,19 +39,17 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     var quaternion = default(Quaternion);
                     quaternion.eulerAngles = new Vector3(0f, 0f, 1000 - (int)cutDirection);
-                    Vector3 dir = quaternion * Vector3.forward;
+                    Vector3 dir = quaternion * Vector3.down;
                     __result = new Vector2(dir.x, dir.y);
-                    Debug.Log(__result);
-                    return;
+                    break;
                 }
                 case >= 2000 and <= 2360:
                 {
                     var quaternion = default(Quaternion);
                     quaternion.eulerAngles = new Vector3(0f, 0f, 2000 - (int)cutDirection);
-                    Vector3 dir = quaternion * Vector3.forward;
+                    Vector3 dir = quaternion * Vector3.down;
                     __result = new Vector2(dir.x, dir.y);
-                    Debug.Log(__result);
-                    return;
+                    break;
                 }
             }
         }
@@ -69,13 +67,13 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     int angle = 1000 - (int)cutDirection;
                     __result = angle;
-                    return;
+                    break;
                 }
                 case >= 2000 and <= 2360:
                 {
                     int angle = 2000 - (int)cutDirection;
                     __result = angle;
-                    return;
+                    break;
                 }
             }
         }
@@ -92,11 +90,22 @@ namespace MappingExtensions.HarmonyPatches
         private static void Postfix(ref NoteCutDirection __result, NoteCutDirection __state)
         {
             if (!Plugin.active) return;
-            if ((int)__state >= 1000)
+            switch ((int)__state)
             {
-                var cutDir = (int)__state;
-                int newDir = 2360 - cutDir;
-                __result = (NoteCutDirection)newDir;
+                case >= 1000 and <= 1360:
+                {
+                    var cutDir = (int)__state;
+                    int newDir = 2360 - cutDir;
+                    __result = (NoteCutDirection)newDir;
+                    break;
+                }
+                case >= 2000 and <= 2360:
+                {
+                    var cutDir = (int)__state;
+                    int newDir = 4360 - cutDir;
+                    __result = (NoteCutDirection)newDir;
+                    break;
+                }
             }
         }
     }
