@@ -10,7 +10,7 @@ This adds a host of new things you can do with your maps, currently only possibl
 ##### Supported By
     Notes
     Bombs
-    Walls (Does not support negative layer)
+    Walls (Does not support negative layers)
     Chains
     Arcs
 ### _360 Degree note Rotation_
@@ -32,7 +32,7 @@ This adds a host of new things you can do with your maps, currently only possibl
 ##### Supported By
     Notes
     Bombs
-    Walls (Does not support negative line layers)
+    Walls (Does not support negative layers)
     Chains
     Arcs
 ### _Additional Wall Adjustments_
