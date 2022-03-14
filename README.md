@@ -21,10 +21,10 @@ This adds a host of new things you can do with your maps, currently only possibl
     Bombs
     Chains
     Arcs
-### _Precision note Placement_
-- You can also choose to place your notes in lanes/layers *between* normal layers, or simply redefine the space your map takes place in.
+### _Precision Placement_
+- You can also choose to place your objects in lanes/layers *between* normal layers, or simply redefine the space your map takes place in.
 
-- If you change the line index to be 1000 or higher or -1000 and lower, you'll be placing the note on a "precise" lane, in that instead of every increase being a single lane, every increase will be 1/1000 of a lane.
+- If you change the line index to be 1000 or higher or -1000 and lower, you'll be placing the object on a "precise" lane, in that instead of every increase being a single lane, every increase will be 1/1000 of a lane.
 
 - Do not attempt to use values between -1000 and 1000 for precision placement, using a value like 500 will simply move the object nearly 500 regular lanes outside of the normal space
 
