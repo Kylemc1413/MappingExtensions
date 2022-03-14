@@ -41,7 +41,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetObstacleOffset))]
     internal class BeatmapObjectSpawnControllerGetObstacleOffset
     {
-        private static void Postfix(int noteLineIndex, ref Vector3 __result,  int ____noteLinesCount, Vector3 ____rightVec)
+        private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result,  int ____noteLinesCount, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
             if (noteLineIndex >= 1000 || noteLineIndex <= -1000)
@@ -50,8 +50,7 @@ namespace MappingExtensions.HarmonyPatches
                     noteLineIndex += 2000;
                 float num = -(____noteLinesCount - 1f) * 0.5f;
                 num += noteLineIndex * (StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000);
-                // TODO: Look if we can use the new lineLayer logic (and - 0.15f) instead of using NoteLineLayer.Base.
-                __result = ____rightVec * num + new Vector3(0f, StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(NoteLineLayer.Base), 0f);
+                __result = ____rightVec * num + new Vector3(0f, StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer) + StaticBeatmapObjectSpawnMovementData.kObstacleVerticalOffset, 0f);
             }
         }
     }

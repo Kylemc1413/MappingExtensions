@@ -1,57 +1,43 @@
-﻿using HarmonyLib;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Reflection.Emit;
+using HarmonyLib;
 
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(ObstacleController), nameof(ObstacleController.Init))]
     internal class ObstacleControllerInit
     {
-        private enum Mode { preciseHeight, preciseHeightStart };
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            return new CodeMatcher(instructions)
+                .MatchForward(true, new CodeMatch(OpCodes.Conv_R4),
+                    new CodeMatch(OpCodes.Ldarg_S),
+                    new CodeMatch(OpCodes.Mul))
+                .ThrowIfInvalid("Couldn't match set condition")
+                .SetInstruction(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ObstacleControllerInit), nameof(GetObstacleWidth))))
+                .InstructionEnumeration();
+        }
 
-        private static void Postfix(ObstacleData obstacleData, Vector3 startPos, Vector3 midPos, Vector3 endPos, float move2Duration, float singleLineWidth, 
-             ref Vector3 ____startPos, ref Vector3 ____endPos, ref Vector3 ____midPos, StretchableObstacle ____stretchableObstacle, ref Bounds ____bounds, ColorManager ____colorManager, ref float height)
+        private static void Prefix(ObstacleData obstacleData, ref float height)
         {
             if (!Plugin.active) return;
-            if (obstacleData.width >= 1000 || (int)obstacleData.lineLayer >= 1000 && (int)obstacleData.lineLayer <= 4000 || (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4005000)
+            switch (obstacleData.height)
             {
-                Mode mode = (int)obstacleData.lineLayer >= 4001 && (int)obstacleData.lineLayer <= 4100000 ? Mode.preciseHeightStart : Mode.preciseHeight;
-                int obsHeight;
-                var startHeight = 0;
-                if(mode == Mode.preciseHeightStart)
-                {
-                    var value = (int)obstacleData.lineLayer;
-                    value -= 4001;
-                    obsHeight = value / 1000;
-                    startHeight = value % 1000;
-                }
-                else
-                {
-                    var value = (int)obstacleData.lineLayer;
-                    obsHeight = value - 1000;
-                }
-                float num;
-                if (obstacleData.width >= 1000 || mode == Mode.preciseHeightStart)
-                {
-                    float width = (float)obstacleData.width - 1000;
-                    float precisionLineWidth = singleLineWidth / 1000;
-                    num = width * precisionLineWidth;
-                    Vector3 b = new((num - singleLineWidth) * 0.5f, 4 * ((float)startHeight / 1000), 0f); // Change y of b for start height
-                    ____startPos = startPos + b;
-                    ____midPos = midPos + b;
-                    ____endPos = endPos + b;
-                }
-                else
-                    num = obstacleData.width * singleLineWidth;
-
-                float num2 = (____endPos - ____midPos).magnitude / move2Duration;
-                float length = num2 * obstacleData.duration;
-                float multiplier = 1;
-                if ((int)obstacleData.lineLayer >= 1000)
-                    multiplier = obsHeight / 1000f;
-                
-                ____stretchableObstacle.SetSizeAndColor(Mathf.Abs(num * 0.98f),Mathf.Abs(height * multiplier), Mathf.Abs(length), ____colorManager.GetObstacleEffectColor());
-                ____bounds = ____stretchableObstacle.bounds;
+                case >= 1000:
+                    height = ((float)obstacleData.height - 1000) / 1000 * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
+                    break;
+                case > 2:
+                    height *= StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
+                    break;
             }
+        }
+
+        private static float GetObstacleWidth(float width, float singleLineWidth)
+        {
+            if (!Plugin.active || !(width >= 1000))
+                return width * singleLineWidth;
+
+            return (width - 1000) / 1000 * singleLineWidth;
         }
     }
 }

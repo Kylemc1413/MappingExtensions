@@ -15,13 +15,65 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
+    [HarmonyPatch(typeof(BeatmapSaveData), "GetHeightForObstacleType")]
+    internal class BeatmapSaveDataGetHeightForObstacleType
+    {
+        private enum Mode { preciseHeight, preciseHeightStart };
+
+        private static void Postfix(BeatmapSaveDataVersion2_6_0AndEarlier.BeatmapSaveData.ObstacleType obstacleType, ref int __result)
+        {
+            if ((int)obstacleType >= 1000 && (int)obstacleType <= 4000 || (int)obstacleType >= 4001 && (int)obstacleType <= 4005000)
+            {
+                Mode mode = (int)obstacleType >= 4001 && (int)obstacleType <= 4100000 ? Mode.preciseHeightStart : Mode.preciseHeight;
+                int obsHeight;
+                var value = (int)obstacleType;
+                if(mode == Mode.preciseHeightStart)
+                {
+                    value -= 4001;
+                    obsHeight = value / 1000;
+                }
+                else
+                {
+                    obsHeight = value - 1000;
+                }
+                float height = obsHeight / 1000f * 5f;
+                __result = (int)(height * 1000 + 1000);
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(BeatmapSaveData), "GetLayerForObstacleType")]
     internal class BeatmapSaveDataGetLayerForObstacleType
     {
+        private enum Mode { preciseHeight, preciseHeightStart };
+
         private static void Postfix(BeatmapSaveDataVersion2_6_0AndEarlier.BeatmapSaveData.ObstacleType obstacleType, ref int __result)
         {
-            if ((int)obstacleType > 2 || (int)obstacleType < 0)
-                __result = (int)obstacleType;
+            if ((int)obstacleType >= 1000 && (int)obstacleType <= 4000 || (int)obstacleType >= 4001 && (int)obstacleType <= 4005000)
+            {
+                Mode mode = (int)obstacleType >= 4001 && (int)obstacleType <= 4100000 ? Mode.preciseHeightStart : Mode.preciseHeight;
+                var startHeight = 0;
+                var value = (int)obstacleType;
+                if(mode == Mode.preciseHeightStart)
+                {
+                    value -= 4001;
+                    startHeight = value % 1000;
+                }
+                // Painful math behind this layer calculation logic:
+                // https://media.discordapp.net/attachments/864240224400572467/952764516956004372/unknown.png
+                // It's probably not 100% accurate but should be enough in most cases.
+                float layer = 6.3333f * startHeight + 833.333f;
+                if (layer >= 1000)
+                {
+                    layer += 446;
+                    layer *= 1.05f;
+                    __result = (int)layer;
+                }
+                else
+                {
+                    __result = 1000;
+                }
+            }
         }
     }
 }
