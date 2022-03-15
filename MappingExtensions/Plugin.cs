@@ -57,6 +57,11 @@ namespace MappingExtensions
             active = songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions");
         }
 
+        public static void ForceActivateForSong()
+        {
+            active = true;
+        }
+
         [OnDisable]
         public void OnDisable()
         {
