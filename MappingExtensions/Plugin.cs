@@ -54,7 +54,8 @@ namespace MappingExtensions
             }
             IDifficultyBeatmap? diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
             ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(diff);
-            active = songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions");
+            if(songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
+                active = true;
         }
 
         public static void ForceActivateForSong()
