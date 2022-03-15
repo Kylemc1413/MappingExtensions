@@ -25,7 +25,7 @@ namespace MappingExtensions.HarmonyPatches
             {
                 case <= -1000:
                     height = ((float)obstacleData.height + 2000) / 1000 * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
-                        break;
+                    break;
                 case >= 1000:
                     height = ((float)obstacleData.height - 1000) / 1000 * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
                     break;
