@@ -20,8 +20,7 @@ namespace MappingExtensions.HarmonyPatches
             {
                 switch (lineIndex)
                 {
-                    case >= 1000:
-                    case <= -1000:
+                    case >= 1000 or <= -1000:
                     {
                         int newIndex = lineIndex;
                         var leftSide = false;
@@ -58,8 +57,7 @@ namespace MappingExtensions.HarmonyPatches
             {
                 switch (flipLineIndex)
                 {
-                    case >= 1000:
-                    case <= -1000:
+                    case >= 1000 or <= -1000:
                     {
                         int newIndex = flipLineIndex;
                         var leftSide = false;

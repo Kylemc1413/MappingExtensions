@@ -12,7 +12,7 @@ namespace MappingExtensions
     public class Plugin
     {
         private static Harmony _harmony = null!;
-        internal static IPALogger Log { get; set; } = null!;
+        internal static IPALogger Log { get; private set; } = null!;
         internal static bool active;
 
         [Init]

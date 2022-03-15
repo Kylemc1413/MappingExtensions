@@ -4,11 +4,10 @@ using HarmonyLib;
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(BeatmapSaveData), "SpawnRotationForEventValue")]
-    internal class SpawnRotationProcessorRotationForEventValue
+    internal class BeatmapSaveDataSpawnRotationForEventValue
     {
         private static void Postfix(int index, ref float __result)
         {
-            if (!Plugin.active) return;
             if (BS_Utils.Plugin.LevelData.IsSet && !BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.requires360Movement) return;
             if (index is >= 1000 and <= 1720)
                 __result = index - 1360;
@@ -37,7 +36,8 @@ namespace MappingExtensions.HarmonyPatches
                     obsHeight = value - 1000;
                 }
                 float height = obsHeight / 1000f * 5f;
-                __result = (int)(height * 1000 + 1000);
+                height = height * 1000 + 1000;
+                __result = (int)height;
             }
         }
     }

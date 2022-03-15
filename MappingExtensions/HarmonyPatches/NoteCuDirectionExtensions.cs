@@ -12,17 +12,13 @@ namespace MappingExtensions.HarmonyPatches
             switch ((int)cutDirection)
             {
                 case >= 1000 and <= 1360:
-                {
                     __result = default;
                     __result.eulerAngles = new Vector3(0f, 0f, 1000 - (int)cutDirection);
-                    return;
-                }
+                    break;
                 case >= 2000 and <= 2360:
-                {
                     __result = default;
                     __result.eulerAngles = new Vector3(0f, 0f, 2000 - (int)cutDirection);
-                    return;
-                }
+                    break;
             }
         }
     }
@@ -64,17 +60,11 @@ namespace MappingExtensions.HarmonyPatches
             switch ((int)cutDirection)
             {
                 case >= 1000 and <= 1360:
-                {
-                    int angle = 1000 - (int)cutDirection;
-                    __result = angle;
+                    __result = 1000 - (int)cutDirection;
                     break;
-                }
                 case >= 2000 and <= 2360:
-                {
-                    int angle = 2000 - (int)cutDirection;
-                    __result = angle;
+                    __result = 2000 - (int)cutDirection;
                     break;
-                }
             }
         }
     }

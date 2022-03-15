@@ -11,12 +11,10 @@ namespace MappingExtensions.HarmonyPatches
             const float delta = StaticBeatmapObjectSpawnMovementData.kTopLinesYPos - StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos;
             switch ((int)lineLayer)
             {
-                case >= 1000:
-                case <= -1000:
-                    __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta - delta + (int)lineLayer * (delta / 1000f);
+                case >= 1000 or <= -1000:
+                    __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta - delta + (int)lineLayer * (delta / 1000);
                     break;
-                case > 2:
-                case < 0:
+                case > 2 or < 0:
                     __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta + (int)lineLayer * delta;
                     break;
             }

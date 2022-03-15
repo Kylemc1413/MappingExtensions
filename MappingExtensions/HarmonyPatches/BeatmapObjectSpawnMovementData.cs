@@ -6,7 +6,7 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetNoteOffset))]
     internal class BeatmapObjectSpawnMovementDataGetNoteOffset
     {
-        private static void Postfix(BeatmapObjectSpawnMovementData __instance, int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, int ____noteLinesCount, Vector3 ____rightVec)
+        private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result, int ____noteLinesCount, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
             if (noteLineIndex is >= 1000 or <= -1000)
@@ -58,18 +58,16 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.HighestJumpPosYForLineLayer))]
     internal class BeatmapObjectSpawnMovementDataHighestJumpPosYForLineLayer
     {
-        private static void Postfix(NoteLineLayer lineLayer, ref float __result, float ____topLinesHighestJumpPosY, IJumpOffsetYProvider ____jumpOffsetYProvider, float ____upperLinesHighestJumpPosY)
+        private static void Postfix(NoteLineLayer lineLayer, ref float __result, float ____upperLinesHighestJumpPosY, float ____topLinesHighestJumpPosY, IJumpOffsetYProvider ____jumpOffsetYProvider)
         {
             if (!Plugin.active) return;
             float delta = ____topLinesHighestJumpPosY - ____upperLinesHighestJumpPosY;
             switch ((int)lineLayer)
             {
-                case >= 1000:
-                case <= -1000:
-                    __result = ____upperLinesHighestJumpPosY - delta - delta + ____jumpOffsetYProvider.jumpOffsetY + (int)lineLayer * (delta / 1000f);
+                case >= 1000 or <= -1000:
+                    __result = ____upperLinesHighestJumpPosY - delta - delta + ____jumpOffsetYProvider.jumpOffsetY + (int)lineLayer * (delta / 1000);
                     break;
-                case > 2:
-                case < 0:
+                case > 2 or < 0:
                     __result = ____upperLinesHighestJumpPosY - delta + ____jumpOffsetYProvider.jumpOffsetY + (int)lineLayer * delta;
                     break;
             }

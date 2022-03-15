@@ -17,7 +17,7 @@ namespace MappingExtensions.HarmonyPatches
     {
         private static void Postfix(int lineLayer, ref NoteLineLayer __result)
         {
-            if (lineLayer is > 2 or < 0)
+            if (lineLayer > 2)
                 __result = (NoteLineLayer)lineLayer;
         }
     }

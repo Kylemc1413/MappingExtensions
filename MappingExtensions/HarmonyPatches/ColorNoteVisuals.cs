@@ -23,9 +23,9 @@ namespace MappingExtensions.HarmonyPatches
                 .InstructionEnumeration();
         }
 
-        private static bool ShouldConvertToDotNote(NoteCutDirection noteCutDirection)
+        private static bool ShouldConvertToDotNote(NoteCutDirection cutDirection)
         {
-            return Plugin.active && (int)noteCutDirection >= 2000 && (int)noteCutDirection <= 2360;
+            return Plugin.active && (int)cutDirection >= 2000 && (int)cutDirection <= 2360;
         }
     }
 }
