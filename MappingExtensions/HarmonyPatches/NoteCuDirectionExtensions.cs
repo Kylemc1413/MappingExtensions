@@ -79,7 +79,6 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(ref NoteCutDirection __result, NoteCutDirection __state)
         {
-            if (!Plugin.active) return;
             switch ((int)__state)
             {
                 case >= 1000 and <= 1360:
