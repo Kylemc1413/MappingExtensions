@@ -13,7 +13,6 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(ObstacleData __instance, int __state)
         {
-            if (!Plugin.active) return;
             bool precisionWidth = __instance.width >= 1000 || __instance.width <= -1000;
             if (__state is <= 3 and >= 0 && !precisionWidth) return;
             if (__state is >= 1000 or <= -1000 || precisionWidth) // precision lineIndex

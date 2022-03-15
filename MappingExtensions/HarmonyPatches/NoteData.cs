@@ -13,7 +13,6 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(NoteData __instance, string __state)
         {
-            if (!Plugin.active) return;
             int lineIndex = int.Parse(__state.Split(';')[0]);
             int flipLineIndex = int.Parse(__state.Split(';')[1]);
             if (lineIndex is > 3 or < 0)
