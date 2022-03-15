@@ -14,7 +14,7 @@ namespace MappingExtensions.HarmonyPatches
         private static void Postfix(ObstacleData __instance, int __state)
         {
             if (!Plugin.active) return;
-            bool precisionWidth = __instance.width >= 1000;
+            bool precisionWidth = __instance.width >= 1000 || __instance.width <= -1000;
             if (__state is <= 3 and >= 0 && !precisionWidth) return;
             if (__state is >= 1000 or <= -1000 || precisionWidth) // precision lineIndex
             {
@@ -34,13 +34,16 @@ namespace MappingExtensions.HarmonyPatches
                 newIndex = (newIndex - 2000) * -1 + 2000; //flip lineIndex
 
                 int newWidth = __instance.width; // normalize wall width
-                if (newWidth < 1000)
+                if (newWidth < 1000 && newWidth > -1000)
                 {
                     newWidth *= 1000;
                 }
                 else
                 {
-                    newWidth -= 1000;
+                    if(newWidth >= 1000)
+                        newWidth -= 1000;
+                    if (newWidth <= -1000)
+                        newWidth += 1000;
                 }
                 newIndex -= newWidth;
 

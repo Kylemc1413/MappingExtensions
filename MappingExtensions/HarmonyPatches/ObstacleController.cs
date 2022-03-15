@@ -23,20 +23,24 @@ namespace MappingExtensions.HarmonyPatches
             if (!Plugin.active) return;
             switch (obstacleData.height)
             {
+                case <= -1000:
+                    height = ((float)obstacleData.height + 2000) / 1000 * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
+                    break;
                 case >= 1000:
                     height = ((float)obstacleData.height - 1000) / 1000 * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
                     break;
                 case > 2:
-                    height *= StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
+                    height = obstacleData.height * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance;
                     break;
             }
         }
 
         private static float GetObstacleWidth(float width, float singleLineWidth)
         {
-            if (!Plugin.active || !(width >= 1000))
+            if (!Plugin.active || !(width >= 1000 || width <= -1000))
                 return width * singleLineWidth;
-
+            if (width <= -1000)
+                width += 2000;
             return (width - 1000) / 1000 * singleLineWidth;
         }
     }
