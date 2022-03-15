@@ -36,9 +36,9 @@ This adds a host of new things you can do with your maps, currently only possibl
     Chains
     Arcs
 ### _Additional Wall Adjustments_
-- You can change the width of walls to be a value greater than or equal to 1000 to precisely control the width of the wall, with 1000 being the equivalent of 0 width, 2000 being the equivalent of 1 width, etc etc
+- You can use precision placement values for the width of walls.
 - You can change the height of walls to be values higher than the normal base game cap
-- You can change the height of walls to be a value greater than or equal to 1000 to precisely control the height of the wall, with 1000 being the equivalent of 0 height, 2000 being the equivalent of 1 height, etc etc
+- You can use precision placement values for the height of walls.
 ### Important Note
    Walls from older maps using an overloaded Type field will have height and start height automatically converted to layer and height values. This may not be entirely accurate at the moment, and walls may look slightly off on maps not made using the new format, improvements to this are welcomed if anybody that knows the format well and is good at math would like to tackle it.
 
