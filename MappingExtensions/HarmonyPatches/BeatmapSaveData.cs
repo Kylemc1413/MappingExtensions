@@ -62,6 +62,7 @@ namespace MappingExtensions.HarmonyPatches
                 // Painful math behind this layer calculation logic:
                 // https://media.discordapp.net/attachments/864240224400572467/952764516956004372/unknown.png
                 // It's probably not 100% accurate but should be enough in most cases.
+               
                 float layer = 6.3333f * startHeight + 833.333f;
                 if (layer >= 1000)
                 {
@@ -73,6 +74,11 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     __result = 1000;
                 }
+                
+                //Alternative Math that is similarly accurate in shape/proportions but has walls being too high
+                //float layer = startHeight / 750f * 5f;
+                //layer = layer * 1000 + 1500;
+                //__result = (int)layer;
             }
         }
     }
