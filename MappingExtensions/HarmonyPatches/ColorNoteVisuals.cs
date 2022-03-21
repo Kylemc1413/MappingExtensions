@@ -9,6 +9,7 @@ namespace MappingExtensions.HarmonyPatches
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
+            // Converts normal notes to arrowless notes when using a certain rotation range.
             return new CodeMatcher(instructions, il)
                 .MatchForward(true, new CodeMatch(OpCodes.Bne_Un),
                     new CodeMatch(OpCodes.Ldarg_0))

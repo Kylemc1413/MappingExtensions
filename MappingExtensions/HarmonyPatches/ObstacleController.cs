@@ -9,6 +9,7 @@ namespace MappingExtensions.HarmonyPatches
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            // Replaces the obstacle width assignment with our own.
             return new CodeMatcher(instructions)
                 .MatchForward(true, new CodeMatch(OpCodes.Conv_R4),
                     new CodeMatch(OpCodes.Ldarg_S),

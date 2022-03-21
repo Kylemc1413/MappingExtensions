@@ -25,36 +25,36 @@ namespace MappingExtensions.HarmonyPatches
                 switch (headLineIndex)
                 {
                     case >= 1000 or <= -1000:
-                        {
-                            int newIndex = headLineIndex;
-                            var leftSide = false;
-                            if (newIndex <= -1000)
-                                newIndex += 2000;
+                    {
+                        int newIndex = headLineIndex;
+                        var leftSide = false;
+                        if (newIndex <= -1000)
+                            newIndex += 2000;
 
-                            if (newIndex >= 4000)
-                                leftSide = true;
+                        if (newIndex >= 4000)
+                            leftSide = true;
 
-                            newIndex = 5000 - newIndex;
-                            if (leftSide)
-                                newIndex -= 2000;
+                        newIndex = 5000 - newIndex;
+                        if (leftSide)
+                            newIndex -= 2000;
 
-                            __instance.SetProperty("headLineIndex", newIndex);
-                            break;
-                        }
+                        __instance.SetProperty("headLineIndex", newIndex);
+                        break;
+                    }
                     case > 3:
-                        {
-                            int diff = (headLineIndex - 3) * 2;
-                            int newLaneCount = 4 + diff;
-                            __instance.SetProperty("headLineIndex", newLaneCount - diff - 1 - headLineIndex);
-                            break;
-                        }
+                    {
+                        int diff = (headLineIndex - 3) * 2;
+                        int newLaneCount = 4 + diff;
+                        __instance.SetProperty("headLineIndex", newLaneCount - diff - 1 - headLineIndex);
+                        break;
+                    }
                     case < 0:
-                        {
-                            int diff = (0 - headLineIndex) * 2;
-                            int newLaneCount = 4 + diff;
-                            __instance.SetProperty("headLineIndex", newLaneCount - diff - 1 - headLineIndex);
-                            break;
-                        }
+                    {
+                        int diff = (0 - headLineIndex) * 2;
+                        int newLaneCount = 4 + diff;
+                        __instance.SetProperty("headLineIndex", newLaneCount - diff - 1 - headLineIndex);
+                        break;
+                    }
                 }
             }
             if (tailLineIndex is > 3 or < 0)
@@ -62,36 +62,36 @@ namespace MappingExtensions.HarmonyPatches
                 switch (tailLineIndex)
                 {
                     case >= 1000 or <= -1000:
-                        {
-                            int newIndex = tailLineIndex;
-                            var leftSide = false;
-                            if (newIndex <= -1000)
-                                newIndex += 2000;
+                    {
+                        int newIndex = tailLineIndex;
+                        var leftSide = false;
+                        if (newIndex <= -1000)
+                            newIndex += 2000;
 
-                            if (newIndex >= 4000)
-                                leftSide = true;
+                        if (newIndex >= 4000)
+                            leftSide = true;
 
-                            newIndex = 5000 - newIndex;
-                            if (leftSide)
-                                newIndex -= 2000;
+                        newIndex = 5000 - newIndex;
+                        if (leftSide)
+                            newIndex -= 2000;
 
-                            __instance.SetProperty("tailLineIndex", newIndex);
-                            break;
-                        }
+                        __instance.SetProperty("tailLineIndex", newIndex);
+                        break;
+                    }
                     case > 3:
-                        {
-                            int diff = (tailLineIndex - 3) * 2;
-                            int newLaneCount = 4 + diff;
-                            __instance.SetProperty("tailLineIndex", newLaneCount - diff - 1 - tailLineIndex);
-                            break;
-                        }
+                    {
+                        int diff = (tailLineIndex - 3) * 2;
+                        int newLaneCount = 4 + diff;
+                        __instance.SetProperty("tailLineIndex", newLaneCount - diff - 1 - tailLineIndex);
+                        break;
+                    }
                     case < 0:
-                        {
-                            int diff = (0 - tailLineIndex) * 2;
-                            int newLaneCount = 4 + diff;
-                            __instance.SetProperty("tailLineIndex", newLaneCount - diff - 1 - tailLineIndex);
-                            break;
-                        }
+                    {
+                        int diff = (0 - tailLineIndex) * 2;
+                        int newLaneCount = 4 + diff;
+                        __instance.SetProperty("tailLineIndex", newLaneCount - diff - 1 - tailLineIndex);
+                        break;
+                    }
                 }
             }
         }

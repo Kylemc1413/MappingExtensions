@@ -75,7 +75,7 @@ namespace MappingExtensions.HarmonyPatches
                 //    __result = 1000;
                 //}
 
-                //Alternative Math that is similarly accurate in shape/proportions but has walls being too high
+                // Alternative Math that is similarly accurate in shape/proportions but has walls being too high.
                 float layer = startHeight / 750f * 5f;
                 layer = layer * 1000 + 1334;
                 __result = (int)layer;

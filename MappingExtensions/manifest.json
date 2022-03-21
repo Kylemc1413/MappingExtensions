@@ -5,7 +5,7 @@
   "gameVersion": "1.20.0",
   "id": "MappingExtensions",
   "name": "MappingExtensions",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "dependsOn": {
     "SongCore": "^3.0.0",
     "BSIPA": "^4.0.5"
