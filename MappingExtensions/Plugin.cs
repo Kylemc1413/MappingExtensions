@@ -34,15 +34,11 @@ namespace MappingExtensions
 
         private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
-            switch (newScene.name)
-            {
-                case "MenuCore":
-                    active = false;
-                    break;
-                case "GameCore":
-                    CheckActivation();
-                    break;
-            }
+
+            if (newScene.name == BS_Utils.SceneNames.Menu)
+                active = false;
+            else if (newScene.name == BS_Utils.SceneNames.Game)
+                CheckActivation();
         }
 
         private static void CheckActivation()
