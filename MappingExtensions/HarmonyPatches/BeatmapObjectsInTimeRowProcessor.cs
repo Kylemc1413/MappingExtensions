@@ -61,11 +61,11 @@ namespace MappingExtensions.HarmonyPatches
                     list.Add(noteData);
                 }
             }
-            foreach (List<NoteData> list in notesInColumnsReusableProcessingDictionaryOfLists.Values)
+            foreach (List<NoteData> list2 in notesInColumnsReusableProcessingDictionaryOfLists.Values)
             {
-                for (int j = 0; j < list.Count; j++)
+                for (int j = 0; j < list2.Count; j++)
                 {
-                    list[j].SetBeforeJumpNoteLineLayer((NoteLineLayer)j);
+                    list2[j].SetBeforeJumpNoteLineLayer((NoteLineLayer)j);
                 }
             }
             foreach (SliderData sliderData in enumerable2)
@@ -97,9 +97,20 @@ namespace MappingExtensions.HarmonyPatches
                     }
                 }
             }
-            foreach (BeatmapObjectsInTimeRowProcessor.SliderTailData sliderTailData in enumerable3)
+            foreach (SliderData sliderData2 in enumerable2)
             {
-                SliderData slider = sliderTailData.slider;
+                foreach (BeatmapObjectsInTimeRowProcessor.SliderTailData sliderTailData in enumerable3)
+                {
+                    if (SliderTailPositionOverlapsWithBurstSliderHead(sliderData2, sliderTailData.slider))
+                    {
+                        sliderData2.SetHasHeadNote(true);
+                        sliderData2.SetHeadBeforeJumpLineLayer(sliderTailData.slider.tailBeforeJumpLineLayer);
+                    }
+                }
+            }
+            foreach (BeatmapObjectsInTimeRowProcessor.SliderTailData sliderTailData2 in enumerable3)
+            {
+                SliderData slider = sliderTailData2.slider;
                 foreach (NoteData noteData3 in enumerable)
                 {
                     if (SliderTailPositionOverlapsWithNote(slider, noteData3))
@@ -120,6 +131,11 @@ namespace MappingExtensions.HarmonyPatches
         private static bool SliderTailPositionOverlapsWithNote(SliderData slider, NoteData note)
         {
             return slider.tailLineIndex == note.lineIndex && slider.tailLineLayer == note.noteLineLayer;
+        }
+
+        private static bool SliderTailPositionOverlapsWithBurstSliderHead(SliderData slider, SliderData sliderTail)
+        {
+            return slider.sliderType == SliderData.Type.Normal && sliderTail.sliderType == SliderData.Type.Burst && slider.headLineIndex == sliderTail.tailLineIndex && slider.headLineLayer == sliderTail.tailLineLayer;
         }
 
         private static int Clamp(int input, int min, int max)
