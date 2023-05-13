@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "Kyle1413",
   "description": "This adds a host of new things you can do with your maps as a mapper, and allows you to play said maps as a player. View More Info for details.",
-  "gameVersion": "1.29.0",
+  "gameVersion": "1.29.4",
   "id": "MappingExtensions",
   "name": "MappingExtensions",
   "version": "1.7.2",
