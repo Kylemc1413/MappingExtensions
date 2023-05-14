@@ -25,11 +25,11 @@ namespace MappingExtensions.HarmonyPatches
                 .ThrowIfInvalid("Couldn't match insert condition")
                 .Insert(new CodeInstruction(OpCodes.Ldc_I4_0),
                     new CodeInstruction(OpCodes.Ldc_I4_3),
-                    new CodeInstruction(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => Clamp(0, 0, 0))))
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Mathf), nameof(Mathf.Clamp), new[] { typeof(int), typeof(int), typeof(int) })))
                 .InstructionEnumeration();
         }
 
-        private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice, int ____numberOfLines)
+        private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice)
         {
             IEnumerable<NoteData> enumerable = TimeSliceContainerItemsAccessor(ref allObjectsTimeSlice).OfType<NoteData>();
             IEnumerable<SliderData> enumerable2 = TimeSliceContainerItemsAccessor(ref allObjectsTimeSlice).OfType<SliderData>();
@@ -74,26 +74,7 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     if (SliderHeadPositionOverlapsWithNote(sliderData, noteData2))
                     {
-                        sliderData.SetHasHeadNote(true);
                         sliderData.SetHeadBeforeJumpLineLayer(noteData2.beforeJumpNoteLineLayer);
-                        if (sliderData.sliderType == SliderData.Type.Burst)
-                        {
-                            noteData2.ChangeToBurstSliderHead();
-                            if (noteData2.cutDirection == sliderData.tailCutDirection)
-                            {
-                                Vector2 line = StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset(noteData2.lineIndex, ____numberOfLines, noteData2.noteLineLayer) - StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset(sliderData.tailLineIndex, ____numberOfLines, sliderData.tailLineLayer);
-                                float num = noteData2.cutDirection.Direction().SignedAngleToLine(line);
-                                if (Mathf.Abs(num) <= 40f)
-                                {
-                                    noteData2.SetCutDirectionAngleOffset(num);
-                                    sliderData.SetCutDirectionAngleOffset(num, num);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            noteData2.ChangeToSliderHead();
-                        }
                     }
                 }
             }
@@ -103,7 +84,6 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     if (SliderTailPositionOverlapsWithBurstSliderHead(sliderData2, sliderTailData.slider))
                     {
-                        sliderData2.SetHasHeadNote(true);
                         sliderData2.SetHeadBeforeJumpLineLayer(sliderTailData.slider.tailBeforeJumpLineLayer);
                     }
                 }
@@ -115,9 +95,7 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     if (SliderTailPositionOverlapsWithNote(slider, noteData3))
                     {
-                        slider.SetHasTailNote(true);
                         slider.SetTailBeforeJumpLineLayer(noteData3.beforeJumpNoteLineLayer);
-                        noteData3.ChangeToSliderTail();
                     }
                 }
             }
@@ -136,11 +114,6 @@ namespace MappingExtensions.HarmonyPatches
         private static bool SliderTailPositionOverlapsWithBurstSliderHead(SliderData slider, SliderData sliderTail)
         {
             return slider.sliderType == SliderData.Type.Normal && sliderTail.sliderType == SliderData.Type.Burst && slider.headLineIndex == sliderTail.tailLineIndex && slider.headLineLayer == sliderTail.tailLineLayer;
-        }
-
-        private static int Clamp(int input, int min, int max)
-        {
-            return Math.Min(Math.Max(input, min), max);
         }
     }
 }
