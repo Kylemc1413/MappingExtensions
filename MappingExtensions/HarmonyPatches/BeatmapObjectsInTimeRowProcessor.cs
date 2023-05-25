@@ -80,9 +80,16 @@ namespace MappingExtensions.HarmonyPatches
             }
             foreach (SliderData sliderData2 in enumerable2)
             {
+                foreach (SliderData sliderData3 in enumerable2)
+                {
+                    if (sliderData2 != sliderData3 && SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderData3))
+                    {
+                        sliderData2.SetHeadBeforeJumpLineLayer(sliderData3.tailBeforeJumpLineLayer);
+                    }
+                }
                 foreach (BeatmapObjectsInTimeRowProcessor.SliderTailData sliderTailData in enumerable3)
                 {
-                    if (SliderTailPositionOverlapsWithBurstSliderHead(sliderData2, sliderTailData.slider))
+                    if (SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderTailData.slider))
                     {
                         sliderData2.SetHeadBeforeJumpLineLayer(sliderTailData.slider.tailBeforeJumpLineLayer);
                     }
@@ -111,7 +118,7 @@ namespace MappingExtensions.HarmonyPatches
             return slider.tailLineIndex == note.lineIndex && slider.tailLineLayer == note.noteLineLayer;
         }
 
-        private static bool SliderTailPositionOverlapsWithBurstSliderHead(SliderData slider, SliderData sliderTail)
+        private static bool SliderHeadPositionOverlapsWithBurstTail(SliderData slider, SliderData sliderTail)
         {
             return slider.sliderType == SliderData.Type.Normal && sliderTail.sliderType == SliderData.Type.Burst && slider.headLineIndex == sliderTail.tailLineIndex && slider.headLineLayer == sliderTail.tailLineLayer;
         }
