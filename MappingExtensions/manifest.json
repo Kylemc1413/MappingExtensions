@@ -7,8 +7,8 @@
   "name": "MappingExtensions",
   "version": "1.7.2",
   "dependsOn": {
-    "SongCore": "^3.0.0",
-    "BSIPA": "^4.0.5"
+    "BSIPA": "^4.3.0",
+    "SongCore": "^3.0.0"
   },
   "links": {
     "project-source": "https://github.com/Kylemc1413/MappingExtensions",

@@ -2,7 +2,7 @@
 
 namespace MappingExtensions.HarmonyPatches
 {
-    [HarmonyPatch(typeof(BeatmapDataLoader), "ConvertNoteLineLayer")]
+    [HarmonyPatch(typeof(BeatmapDataLoader), nameof(BeatmapDataLoader.ConvertNoteLineLayer))]
     internal class BeatmapDataLoaderConvertNoteLineLayer
     {
         private static void Postfix(int layer, ref NoteLineLayer __result)
@@ -12,7 +12,7 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapDataLoader.ObstacleConvertor), "GetNoteLineLayer")]
+    [HarmonyPatch(typeof(BeatmapDataLoader.ObstacleConvertor), nameof(BeatmapDataLoader.ObstacleConvertor.GetNoteLineLayer))]
     internal class BeatmapDataLoaderObstacleConvertorGetNoteLineLayer
     {
         private static void Postfix(int lineLayer, ref NoteLineLayer __result)

@@ -11,10 +11,6 @@ namespace MappingExtensions.HarmonyPatches
     [HarmonyPatch(typeof(BeatmapObjectsInTimeRowProcessor), nameof(BeatmapObjectsInTimeRowProcessor.HandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlice))]
     internal class BeatmapObjectsInTimeRowProcessorHandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlice
     {
-        // TODO: Remove this when BSIPA gets a fix for missing GameAssemblies.
-        private static readonly FieldAccessor<BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem>, List<BeatmapDataItem>>.Accessor TimeSliceContainerItemsAccessor =
-            FieldAccessor<BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem>, List<BeatmapDataItem>>.GetAccessor("_items");
-
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             // Prevents an IndexOutOfRangeException when using irregular line indexes.
@@ -31,9 +27,9 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice)
         {
-            IEnumerable<NoteData> enumerable = TimeSliceContainerItemsAccessor(ref allObjectsTimeSlice).OfType<NoteData>();
-            IEnumerable<SliderData> enumerable2 = TimeSliceContainerItemsAccessor(ref allObjectsTimeSlice).OfType<SliderData>();
-            IEnumerable<BeatmapObjectsInTimeRowProcessor.SliderTailData> enumerable3 = TimeSliceContainerItemsAccessor(ref allObjectsTimeSlice).OfType<BeatmapObjectsInTimeRowProcessor.SliderTailData>();
+            IEnumerable<NoteData> enumerable = allObjectsTimeSlice.items.OfType<NoteData>();
+            IEnumerable<SliderData> enumerable2 = allObjectsTimeSlice.items.OfType<SliderData>();
+            IEnumerable<BeatmapObjectsInTimeRowProcessor.SliderTailData> enumerable3 = allObjectsTimeSlice.items.OfType<BeatmapObjectsInTimeRowProcessor.SliderTailData>();
             if (!enumerable.Any(x => x.lineIndex > 3 || x.lineIndex < 0))
             {
                 return;
@@ -72,7 +68,7 @@ namespace MappingExtensions.HarmonyPatches
             {
                 foreach (NoteData noteData2 in enumerable)
                 {
-                    if (SliderHeadPositionOverlapsWithNote(sliderData, noteData2))
+                    if (BeatmapObjectsInTimeRowProcessor.SliderHeadPositionOverlapsWithNote(sliderData, noteData2))
                     {
                         sliderData.SetHeadBeforeJumpLineLayer(noteData2.beforeJumpNoteLineLayer);
                     }
@@ -82,14 +78,14 @@ namespace MappingExtensions.HarmonyPatches
             {
                 foreach (SliderData sliderData3 in enumerable2)
                 {
-                    if (sliderData2 != sliderData3 && SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderData3))
+                    if (sliderData2 != sliderData3 && BeatmapObjectsInTimeRowProcessor.SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderData3))
                     {
                         sliderData2.SetHeadBeforeJumpLineLayer(sliderData3.tailBeforeJumpLineLayer);
                     }
                 }
                 foreach (BeatmapObjectsInTimeRowProcessor.SliderTailData sliderTailData in enumerable3)
                 {
-                    if (SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderTailData.slider))
+                    if (BeatmapObjectsInTimeRowProcessor.SliderHeadPositionOverlapsWithBurstTail(sliderData2, sliderTailData.slider))
                     {
                         sliderData2.SetHeadBeforeJumpLineLayer(sliderTailData.slider.tailBeforeJumpLineLayer);
                     }
@@ -100,27 +96,12 @@ namespace MappingExtensions.HarmonyPatches
                 SliderData slider = sliderTailData2.slider;
                 foreach (NoteData noteData3 in enumerable)
                 {
-                    if (SliderTailPositionOverlapsWithNote(slider, noteData3))
+                    if (BeatmapObjectsInTimeRowProcessor.SliderTailPositionOverlapsWithNote(slider, noteData3))
                     {
                         slider.SetTailBeforeJumpLineLayer(noteData3.beforeJumpNoteLineLayer);
                     }
                 }
             }
-        }
-
-        private static bool SliderHeadPositionOverlapsWithNote(SliderData slider, NoteData note)
-        {
-            return slider.headLineIndex == note.lineIndex && slider.headLineLayer == note.noteLineLayer;
-        }
-
-        private static bool SliderTailPositionOverlapsWithNote(SliderData slider, NoteData note)
-        {
-            return slider.tailLineIndex == note.lineIndex && slider.tailLineLayer == note.noteLineLayer;
-        }
-
-        private static bool SliderHeadPositionOverlapsWithBurstTail(SliderData slider, SliderData sliderTail)
-        {
-            return slider.sliderType == SliderData.Type.Normal && sliderTail.sliderType == SliderData.Type.Burst && slider.headLineIndex == sliderTail.tailLineIndex && slider.headLineLayer == sliderTail.tailLineLayer;
         }
     }
 }

@@ -3,7 +3,7 @@ using HarmonyLib;
 
 namespace MappingExtensions.HarmonyPatches
 {
-    [HarmonyPatch(typeof(BeatmapSaveData), "SpawnRotationForEventValue")]
+    [HarmonyPatch(typeof(BeatmapSaveData), nameof(BeatmapSaveData.SpawnRotationForEventValue))]
     internal class BeatmapSaveDataSpawnRotationForEventValue
     {
         private static void Postfix(int index, ref float __result)
@@ -14,7 +14,7 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapSaveData), "GetHeightForObstacleType")]
+    [HarmonyPatch(typeof(BeatmapSaveData), nameof(BeatmapSaveData.GetHeightForObstacleType))]
     internal class BeatmapSaveDataGetHeightForObstacleType
     {
         private enum Mode { preciseHeight, preciseHeightStart };
@@ -42,7 +42,7 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapSaveData), "GetLayerForObstacleType")]
+    [HarmonyPatch(typeof(BeatmapSaveData), nameof(BeatmapSaveData.GetLayerForObstacleType))]
     internal class BeatmapSaveDataGetLayerForObstacleType
     {
         private enum Mode { preciseHeight, preciseHeightStart };
