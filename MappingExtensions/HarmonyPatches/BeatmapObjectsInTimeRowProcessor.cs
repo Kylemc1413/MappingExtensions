@@ -1,9 +1,7 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-using IPA.Utilities;
+using HarmonyLib;
 using UnityEngine;
 
 namespace MappingExtensions.HarmonyPatches
@@ -13,7 +11,7 @@ namespace MappingExtensions.HarmonyPatches
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            // Prevents an IndexOutOfRangeException when using irregular line indexes.
+            // Prevents an IndexOutOfRangeException when processing precise line indexes.
             return new CodeMatcher(instructions)
                 .MatchForward(true, new CodeMatch(OpCodes.Ldloc_S),
                     new CodeMatch(OpCodes.Callvirt),
@@ -28,20 +26,20 @@ namespace MappingExtensions.HarmonyPatches
         private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice)
         {
             IEnumerable<NoteData> enumerable = allObjectsTimeSlice.items.OfType<NoteData>();
-            IEnumerable<SliderData> enumerable2 = allObjectsTimeSlice.items.OfType<SliderData>();
-            IEnumerable<BeatmapObjectsInTimeRowProcessor.SliderTailData> enumerable3 = allObjectsTimeSlice.items.OfType<BeatmapObjectsInTimeRowProcessor.SliderTailData>();
             if (!enumerable.Any(x => x.lineIndex > 3 || x.lineIndex < 0))
             {
                 return;
             }
-            Dictionary<int, List<NoteData>> notesInColumnsReusableProcessingDictionaryOfLists = new Dictionary<int, List<NoteData>>();
+            IEnumerable<SliderData> enumerable2 = allObjectsTimeSlice.items.OfType<SliderData>();
+            IEnumerable<BeatmapObjectsInTimeRowProcessor.SliderTailData> enumerable3 = allObjectsTimeSlice.items.OfType<BeatmapObjectsInTimeRowProcessor.SliderTailData>();
+            Dictionary<int, List<NoteData>> notesInColumnsProcessingDictionaryOfLists = new Dictionary<int, List<NoteData>>();
             foreach (NoteData noteData in enumerable)
             {
-                if (!notesInColumnsReusableProcessingDictionaryOfLists.ContainsKey(noteData.lineIndex))
+                if (!notesInColumnsProcessingDictionaryOfLists.ContainsKey(noteData.lineIndex))
                 {
-                    notesInColumnsReusableProcessingDictionaryOfLists[noteData.lineIndex] = new List<NoteData>(3);
+                    notesInColumnsProcessingDictionaryOfLists[noteData.lineIndex] = new List<NoteData>(3);
                 }
-                List<NoteData> list = notesInColumnsReusableProcessingDictionaryOfLists[noteData.lineIndex];
+                List<NoteData> list = notesInColumnsProcessingDictionaryOfLists[noteData.lineIndex];
                 bool flag = false;
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -57,7 +55,7 @@ namespace MappingExtensions.HarmonyPatches
                     list.Add(noteData);
                 }
             }
-            foreach (List<NoteData> list2 in notesInColumnsReusableProcessingDictionaryOfLists.Values)
+            foreach (List<NoteData> list2 in notesInColumnsProcessingDictionaryOfLists.Values)
             {
                 for (int j = 0; j < list2.Count; j++)
                 {

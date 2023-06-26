@@ -73,11 +73,6 @@
 
   <ItemGroup>
     <None Include="MappingExtensions.csproj.user" Condition="Exists('MappingExtensions.csproj.user')" />
-    <None Include="../README.md" Condition="Exists('../README.md')" />
-    <None Include="../CHANGELOG.md" Condition="Exists('../CHANGELOG.md')" />
-    <None Include="../LICENSE" Condition="Exists('../LICENSE')" />
-    <None Include="../.gitignore" Condition="Exists('../.gitignore')" />
-    <None Include="../.gitattributes" Condition="Exists('../.gitattributes')" />
   </ItemGroup>
 
 </Project>

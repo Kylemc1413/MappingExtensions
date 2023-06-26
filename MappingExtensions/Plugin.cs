@@ -32,9 +32,8 @@ namespace MappingExtensions
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
-        private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+        private static void OnActiveSceneChanged(Scene previousScene, Scene newScene)
         {
-
             if (newScene.name == BS_Utils.SceneNames.Menu)
                 active = false;
             else if (newScene.name == BS_Utils.SceneNames.Game)
