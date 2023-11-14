@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using IPA.Utilities;
 
 namespace MappingExtensions.HarmonyPatches
 {
@@ -13,8 +12,9 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(NoteData __instance, string __state)
         {
-            int lineIndex = int.Parse(__state.Split(';')[0]);
-            int flipLineIndex = int.Parse(__state.Split(';')[1]);
+            string[] lineIndexes = __state.Split(';');
+            int lineIndex = int.Parse(lineIndexes[0]);
+            int flipLineIndex = int.Parse(lineIndexes[1]);
             if (lineIndex is > 3 or < 0)
             {
                 switch (lineIndex)
@@ -33,21 +33,21 @@ namespace MappingExtensions.HarmonyPatches
                         if (leftSide)
                             newIndex -= 2000;
 
-                        __instance.SetProperty("lineIndex", newIndex);
+                        __instance.lineIndex = newIndex;
                         break;
                     }
                     case > 3:
                     {
                         int diff = (lineIndex - 3) * 2;
                         int newLaneCount = 4 + diff;
-                        __instance.SetProperty("lineIndex", newLaneCount - diff - 1 - lineIndex);
+                        __instance.lineIndex = newLaneCount - diff - 1 - lineIndex;
                         break;
                     }
                     case < 0:
                     {
                         int diff = (0 - lineIndex) * 2;
                         int newLaneCount = 4 + diff;
-                        __instance.SetProperty("lineIndex", newLaneCount - diff - 1 - lineIndex);
+                        __instance.lineIndex = newLaneCount - diff - 1 - lineIndex;
                         break;
                     }
                 }
@@ -70,21 +70,21 @@ namespace MappingExtensions.HarmonyPatches
                         if (leftSide)
                             newIndex -= 2000;
 
-                        __instance.SetProperty("flipLineIndex", newIndex);
+                        __instance.flipLineIndex = newIndex;
                         break;
                     }
                     case > 3:
                     {
                         int diff = (flipLineIndex - 3) * 2;
                         int newLaneCount = 4 + diff;
-                        __instance.SetProperty("flipLineIndex", newLaneCount - diff - 1 - flipLineIndex);
+                        __instance.flipLineIndex = newLaneCount - diff - 1 - flipLineIndex;
                         break;
                     }
                     case < 0:
                     {
                         int diff = (0 - flipLineIndex) * 2;
                         int newLaneCount = 4 + diff;
-                        __instance.SetProperty("flipLineIndex", newLaneCount - diff - 1 - flipLineIndex);
+                        __instance.flipLineIndex = newLaneCount - diff - 1 - flipLineIndex;
                         break;
                     }
                 }

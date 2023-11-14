@@ -26,7 +26,7 @@ namespace MappingExtensions.HarmonyPatches
         private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice)
         {
             IEnumerable<NoteData> enumerable = allObjectsTimeSlice.items.OfType<NoteData>();
-            if (!enumerable.Any(x => x.lineIndex > 3 || x.lineIndex < 0))
+            if (!enumerable.Any(x => x.lineIndex is > 3 or < 0))
             {
                 return;
             }

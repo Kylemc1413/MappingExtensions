@@ -26,7 +26,7 @@ namespace MappingExtensions.HarmonyPatches
 
         private static bool ShouldConvertToDotNote(NoteCutDirection cutDirection)
         {
-            return Plugin.active && (int)cutDirection >= 2000 && (int)cutDirection <= 2360;
+            return Plugin.active && (int)cutDirection is >= 2000 and <= 2360;
         }
     }
 }

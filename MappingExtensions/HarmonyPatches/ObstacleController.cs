@@ -38,7 +38,7 @@ namespace MappingExtensions.HarmonyPatches
 
         private static float GetObstacleWidth(float width, float singleLineWidth)
         {
-            if (!Plugin.active || !(width >= 1000 || width <= -1000))
+            if (!Plugin.active || !(width is >= 1000 or <= -1000))
                 return width * singleLineWidth;
             if (width <= -1000)
                 width += 2000;

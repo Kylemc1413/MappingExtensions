@@ -1,5 +1,4 @@
 using HarmonyLib;
-using IPA.Utilities;
 
 namespace MappingExtensions.HarmonyPatches
 {
@@ -13,7 +12,7 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(ObstacleData __instance, int __state)
         {
-            bool precisionWidth = __instance.width >= 1000 || __instance.width <= -1000;
+            bool precisionWidth = __instance.width is >= 1000 or <= -1000;
             if (__state is <= 3 and >= 0 && !precisionWidth) return;
             if (__state is >= 1000 or <= -1000 || precisionWidth) // precision lineIndex
             {
@@ -33,7 +32,7 @@ namespace MappingExtensions.HarmonyPatches
                 newIndex = (newIndex - 2000) * -1 + 2000; //flip lineIndex
 
                 int newWidth = __instance.width; // normalize wall width
-                if (newWidth < 1000 && newWidth > -1000)
+                if (newWidth is < 1000 and > -1000)
                 {
                     newWidth *= 1000;
                 }
@@ -54,12 +53,12 @@ namespace MappingExtensions.HarmonyPatches
                 {
                     newIndex += 1000;
                 }
-                __instance.SetProperty("lineIndex", newIndex);
+                __instance.lineIndex = newIndex;
             }
             else // state > -1000 || state < 1000 assumes no precision width
             {
                 int mirrorLane = (__state - 2) * -1 + 2; // flip lineIndex
-                __instance.SetProperty("lineIndex", mirrorLane - __instance.width); // adjust for wall width
+                __instance.lineIndex = mirrorLane - __instance.width; // adjust for wall width
             }
         }
     }

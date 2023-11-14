@@ -44,7 +44,7 @@ namespace MappingExtensions.HarmonyPatches
         private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector3 __result,  int ____noteLinesCount, Vector3 ____rightVec)
         {
             if (!Plugin.active) return;
-            if (noteLineIndex >= 1000 || noteLineIndex <= -1000)
+            if (noteLineIndex is >= 1000 or <= -1000)
             {
                 if (noteLineIndex <= -1000)
                     noteLineIndex += 2000;
