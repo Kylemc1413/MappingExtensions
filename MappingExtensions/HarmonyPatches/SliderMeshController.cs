@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MappingExtensions.HarmonyPatches
 {
-    [HarmonyPatch(typeof(SliderMeshController), "CutDirectionToControlPointPosition")]
+    [HarmonyPatch(typeof(SliderMeshController), nameof(SliderMeshController.CutDirectionToControlPointPosition))]
     internal class SliderMeshControllerCutDirectionToControlPointPosition
     {
         private static void Postfix(NoteCutDirection noteCutDirection, ref Vector3 __result)
