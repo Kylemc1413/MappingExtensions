@@ -11,8 +11,8 @@ namespace MappingExtensions
     [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
-        private PluginMetadata _metadata;
-        private Harmony _harmony;
+        private readonly PluginMetadata _metadata;
+        private readonly Harmony _harmony;
 
         internal static IPALogger Log { get; private set; } = null!;
         internal static bool active;
@@ -51,8 +51,9 @@ namespace MappingExtensions
                 active = false;
                 return;
             }
-            IDifficultyBeatmap? diff = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
-            ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(diff);
+
+            var gameplayCoreSceneSetupData = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData;
+            ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(gameplayCoreSceneSetupData.beatmapLevel, gameplayCoreSceneSetupData.beatmapKey);
             if (songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
                 active = true;
         }
@@ -65,10 +66,10 @@ namespace MappingExtensions
         [OnDisable]
         public void OnDisable()
         {
-            SongCore.Collections.DeregisterizeCapability("Mapping Extensions");
-            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-Precision Placement");
-            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-Extra Note Angles");
-            SongCore.Collections.DeregisterizeCapability("Mapping Extensions-More Lanes");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-Precision Placement");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-Extra Note Angles");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-More Lanes");
             _harmony.UnpatchSelf();
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
