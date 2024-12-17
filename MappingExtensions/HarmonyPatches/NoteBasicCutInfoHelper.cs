@@ -3,13 +3,19 @@
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(NoteBasicCutInfoHelper), nameof(NoteBasicCutInfoHelper.GetBasicCutInfo))]
-    internal class NoteBasicCutInfoHelperGetBasicCutInfo
+    internal class NoteBasicCutInfoHelperGetBasicCutInfoPatch
     {
         private static void Prefix(ref NoteCutDirection cutDirection)
         {
-            if (!Plugin.active) return;
+            if (!Plugin.active)
+            {
+                return;
+            }
+
             if ((int)cutDirection is >= 2000 and <= 2360)
+            {
                 cutDirection = NoteCutDirection.Any;
+            }
         }
     }
 }

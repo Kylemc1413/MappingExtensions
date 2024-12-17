@@ -4,37 +4,49 @@ using UnityEngine;
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(StaticBeatmapObjectSpawnMovementData), nameof(StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer))]
-    internal class BeatmapObjectSpawnMovementDataLineYPosForLineLayer
+    internal class StaticBeatmapObjectSpawnMovementDataLineYPosForLineLayerPatch
     {
-        private static void Postfix(NoteLineLayer lineLayer, ref float __result)
+        private static void Postfix(ref float __result, NoteLineLayer lineLayer)
         {
-            if (!Plugin.active) return;
-            const float delta = StaticBeatmapObjectSpawnMovementData.kTopLinesYPos - StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos;
-            switch ((int)lineLayer)
+            if (!Plugin.active)
             {
-                case >= 1000 or <= -1000:
-                    __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta - delta + (int)lineLayer * (delta / 1000);
-                    break;
-                case > 2 or < 0:
-                    __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta + (int)lineLayer * delta;
-                    break;
+                return;
+            }
+
+            const float delta = StaticBeatmapObjectSpawnMovementData.kTopLinesYPos - StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos;
+            var layer = (int)lineLayer;
+            if (layer is >= 1000 or <= -1000)
+            {
+                __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta - delta + layer * delta / 1000;
+            }
+            else if (layer is > 2 or < 0)
+            {
+                __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta + layer * delta;
             }
         }
     }
 
     [HarmonyPatch(typeof(StaticBeatmapObjectSpawnMovementData), nameof(StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset))]
-    internal class BeatmapObjectSpawnMovementDataGet2DNoteOffset
+    internal class StaticBeatmapObjectSpawnMovementDataGet2DNoteOffsetPatch
     {
-        private static void Postfix(int noteLineIndex, NoteLineLayer noteLineLayer, ref Vector2 __result, int noteLinesCount)
+        private static void Postfix(ref Vector2 __result, int noteLineIndex, int noteLinesCount, NoteLineLayer noteLineLayer)
         {
-            if (!Plugin.active) return;
+            if (!Plugin.active)
+            {
+                return;
+            }
+
             if (noteLineIndex is >= 1000 or <= -1000)
             {
                 if (noteLineIndex <= -1000)
+                {
                     noteLineIndex += 2000;
-                float num = -(noteLinesCount - 1f) * 0.5f;
-                float x = num + noteLineIndex * (StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000);
-                float y = StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer);
+                }
+
+                // TODO: Find a better name for this variable.
+                var num = -(noteLinesCount - 1f) * 0.5f;
+                var x = num + noteLineIndex * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000;
+                var y = StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer);
                 __result = new Vector2(x, y);
             }
         }

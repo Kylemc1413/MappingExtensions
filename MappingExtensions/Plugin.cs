@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 using HarmonyLib;
 using IPA;
 using IPA.Loader;
-using SongCore.Data;
-using IPALogger = IPA.Logging.Logger;
+using IPA.Logging;
 
 namespace MappingExtensions
 {
@@ -14,11 +13,11 @@ namespace MappingExtensions
         private readonly PluginMetadata _metadata;
         private readonly Harmony _harmony;
 
-        internal static IPALogger Log { get; private set; } = null!;
+        internal static Logger Log { get; private set; } = null!;
         internal static bool active;
 
         [Init]
-        public Plugin(IPALogger logger, PluginMetadata metadata)
+        public Plugin(Logger logger, PluginMetadata metadata)
         {
             Log = logger;
             _metadata = metadata;
@@ -36,12 +35,28 @@ namespace MappingExtensions
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
+        [OnDisable]
+        public void OnDisable()
+        {
+            SongCore.Collections.DeregisterCapability("Mapping Extensions");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-Precision Placement");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-Extra Note Angles");
+            SongCore.Collections.DeregisterCapability("Mapping Extensions-More Lanes");
+            _harmony.UnpatchSelf();
+            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+        }
+
         private static void OnActiveSceneChanged(Scene previousScene, Scene newScene)
         {
-            if (newScene.name == BS_Utils.SceneNames.Menu)
+            var newSceneName = newScene.name;
+            if (newSceneName == BS_Utils.SceneNames.Menu)
+            {
                 active = false;
-            else if (newScene.name == BS_Utils.SceneNames.Game)
+            }
+            else if (newSceneName == BS_Utils.SceneNames.Game)
+            {
                 CheckActivation();
+            }
         }
 
         private static void CheckActivation()
@@ -53,25 +68,16 @@ namespace MappingExtensions
             }
 
             var gameplayCoreSceneSetupData = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData;
-            ExtraSongData.DifficultyData? songData = SongCore.Collections.RetrieveDifficultyData(gameplayCoreSceneSetupData.beatmapLevel, gameplayCoreSceneSetupData.beatmapKey);
+            var songData = SongCore.Collections.RetrieveDifficultyData(gameplayCoreSceneSetupData.beatmapLevel, gameplayCoreSceneSetupData.beatmapKey);
             if (songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
+            {
                 active = true;
+            }
         }
 
         public static void ForceActivateForSong()
         {
             active = true;
-        }
-
-        [OnDisable]
-        public void OnDisable()
-        {
-            SongCore.Collections.DeregisterCapability("Mapping Extensions");
-            SongCore.Collections.DeregisterCapability("Mapping Extensions-Precision Placement");
-            SongCore.Collections.DeregisterCapability("Mapping Extensions-Extra Note Angles");
-            SongCore.Collections.DeregisterCapability("Mapping Extensions-More Lanes");
-            _harmony.UnpatchSelf();
-            SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
     }
 }

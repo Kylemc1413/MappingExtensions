@@ -3,87 +3,106 @@
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(NoteData), nameof(NoteData.Mirror))]
-    internal class NoteDataMirror
+    internal class NoteDataMirrorPatch
     {
-        private static void Prefix(NoteData __instance, out string __state)
+        private static void Prefix(NoteData __instance, out int[] __state)
         {
-            __state = $"{__instance.lineIndex};{__instance.flipLineIndex}";
+            __state = new[] { __instance.lineIndex, __instance.flipLineIndex };
         }
 
-        private static void Postfix(NoteData __instance, string __state)
+        private static void Postfix(NoteData __instance, int[] __state)
         {
-            string[] lineIndexes = __state.Split(';');
-            int lineIndex = int.Parse(lineIndexes[0]);
-            int flipLineIndex = int.Parse(lineIndexes[1]);
+            var lineIndex = __state[0];
+            var flipLineIndex = __state[1];
+
             if (lineIndex is > 3 or < 0)
             {
                 switch (lineIndex)
                 {
                     case >= 1000 or <= -1000:
                     {
-                        int newIndex = lineIndex;
                         var leftSide = false;
-                        if (newIndex <= -1000)
-                            newIndex += 2000;
 
-                        if (newIndex >= 4000)
+                        if (lineIndex <= -1000)
+                        {
+                            lineIndex += 2000;
+                        }
+
+                        if (lineIndex >= 4000)
+                        {
                             leftSide = true;
+                        }
 
-                        newIndex = 5000 - newIndex;
+                        lineIndex = 5000 - lineIndex;
+
                         if (leftSide)
-                            newIndex -= 2000;
+                        {
+                            lineIndex -= 2000;
+                        }
 
-                        __instance.lineIndex = newIndex;
+                        __instance.lineIndex = lineIndex;
                         break;
                     }
                     case > 3:
                     {
-                        int diff = (lineIndex - 3) * 2;
-                        int newLaneCount = 4 + diff;
+                        // TODO: Find better naming for that variable.
+                        var diff = (lineIndex - 3) * 2;
+                        var newLaneCount = 4 + diff;
                         __instance.lineIndex = newLaneCount - diff - 1 - lineIndex;
                         break;
                     }
                     case < 0:
                     {
-                        int diff = (0 - lineIndex) * 2;
-                        int newLaneCount = 4 + diff;
+                        // TODO: Find better naming for that variable.
+                        var diff = (0 - lineIndex) * 2;
+                        var newLaneCount = 4 + diff;
                         __instance.lineIndex = newLaneCount - diff - 1 - lineIndex;
                         break;
                     }
                 }
             }
+
             if (flipLineIndex is > 3 or < 0)
             {
                 switch (flipLineIndex)
                 {
                     case >= 1000 or <= -1000:
                     {
-                        int newIndex = flipLineIndex;
                         var leftSide = false;
-                        if (newIndex <= -1000)
-                            newIndex += 2000;
 
-                        if (newIndex >= 4000)
+                        if (flipLineIndex <= -1000)
+                        {
+                            flipLineIndex += 2000;
+                        }
+
+                        if (flipLineIndex >= 4000)
+                        {
                             leftSide = true;
+                        }
 
-                        newIndex = 5000 - newIndex;
+                        flipLineIndex = 5000 - flipLineIndex;
+
                         if (leftSide)
-                            newIndex -= 2000;
+                        {
+                            flipLineIndex -= 2000;
+                        }
 
-                        __instance.flipLineIndex = newIndex;
+                        __instance.flipLineIndex = flipLineIndex;
                         break;
                     }
                     case > 3:
                     {
-                        int diff = (flipLineIndex - 3) * 2;
-                        int newLaneCount = 4 + diff;
+                        // TODO: Find better naming for that variable.
+                        var diff = (flipLineIndex - 3) * 2;
+                        var newLaneCount = 4 + diff;
                         __instance.flipLineIndex = newLaneCount - diff - 1 - flipLineIndex;
                         break;
                     }
                     case < 0:
                     {
-                        int diff = (0 - flipLineIndex) * 2;
-                        int newLaneCount = 4 + diff;
+                        // TODO: Find better naming for that variable.
+                        var diff = (0 - flipLineIndex) * 2;
+                        var newLaneCount = 4 + diff;
                         __instance.flipLineIndex = newLaneCount - diff - 1 - flipLineIndex;
                         break;
                     }

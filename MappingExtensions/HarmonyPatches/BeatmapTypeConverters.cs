@@ -3,22 +3,26 @@
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(BeatmapTypeConverters), nameof(BeatmapTypeConverters.ConvertNoteLineLayer), typeof(int))]
-    internal class BeatmapDataLoaderConvertNoteLineLayer
+    internal class BeatmapTypeConvertersConvertNoteLineLayerPatch
     {
-        private static void Postfix(int layer, ref NoteLineLayer __result)
+        private static void Postfix(ref NoteLineLayer __result, int layer)
         {
             if (layer is > 2 or < 0)
+            {
                 __result = (NoteLineLayer)layer;
+            }
         }
     }
 
     [HarmonyPatch(typeof(BeatmapTypeConverters), nameof(BeatmapTypeConverters.ConvertNoteLineLayer), typeof(BeatmapSaveDataCommon.NoteLineLayer))]
-    internal class BeatmapDataLoaderConvertNoteLineLayer2
+    internal class BeatmapTypeConvertersConvertNoteLineLayerPatch2
     {
-        private static void Postfix(BeatmapSaveDataCommon.NoteLineLayer layer, ref NoteLineLayer __result)
+        private static void Postfix(ref NoteLineLayer __result, BeatmapSaveDataCommon.NoteLineLayer layer)
         {
             if ((int)layer is > 2 or < 0)
+            {
                 __result = (NoteLineLayer)layer;
+            }
         }
     }
 }

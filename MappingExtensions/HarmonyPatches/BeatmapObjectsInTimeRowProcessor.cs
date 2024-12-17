@@ -1,28 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
-using UnityEngine;
+using SongCore.Utilities;
 
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(BeatmapObjectsInTimeRowProcessor), nameof(BeatmapObjectsInTimeRowProcessor.HandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlice))]
-    internal class BeatmapObjectsInTimeRowProcessorHandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlice
+    internal class BeatmapObjectsInTimeRowProcessorHandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlicePatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             // Prevents an IndexOutOfRangeException when processing precise line indexes.
             return new CodeMatcher(instructions)
-                .MatchForward(true, new CodeMatch(OpCodes.Ldloc_S),
+                .MatchEndForward(
+                    new CodeMatch(OpCodes.Ldloc_S),
                     new CodeMatch(OpCodes.Callvirt),
                     new CodeMatch(OpCodes.Ldelem_Ref))
-                .ThrowIfInvalid("Couldn't match insert condition")
-                .Insert(new CodeInstruction(OpCodes.Ldc_I4_0),
+                .ThrowIfInvalid()
+                .Insert(
+                    new CodeInstruction(OpCodes.Ldc_I4_0),
                     new CodeInstruction(OpCodes.Ldc_I4_3),
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Mathf), nameof(Mathf.Clamp), new[] { typeof(int), typeof(int), typeof(int) })))
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Math), nameof(Math.Clamp), new[] { typeof(int), typeof(int), typeof(int) })))
                 .InstructionEnumeration();
         }
 
+        // TODO: Make this less compiler-generated garbage.
         private static void Postfix(BeatmapObjectsInTimeRowProcessor.TimeSliceContainer<BeatmapDataItem> allObjectsTimeSlice)
         {
             IEnumerable<NoteData> enumerable = allObjectsTimeSlice.items.OfType<NoteData>();

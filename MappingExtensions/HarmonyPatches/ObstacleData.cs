@@ -3,7 +3,7 @@ using HarmonyLib;
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(ObstacleData), nameof(ObstacleData.Mirror))]
-    internal class ObstacleDataMirror
+    internal class ObstacleDataMirrorPatch
     {
         private static void Prefix(ObstacleData __instance, out int __state)
         {
@@ -12,53 +12,66 @@ namespace MappingExtensions.HarmonyPatches
 
         private static void Postfix(ObstacleData __instance, int __state)
         {
-            bool precisionWidth = __instance.width is >= 1000 or <= -1000;
-            if (__state is <= 3 and >= 0 && !precisionWidth) return;
-            if (__state is >= 1000 or <= -1000 || precisionWidth) // precision lineIndex
+            var lineIndex = __state;
+            var obstacleWidth = __instance.width;
+            var precisionWidth = obstacleWidth is >= 1000 or <= -1000;
+
+            if (lineIndex is <= 3 and >= 0 && !precisionWidth)
             {
-                int newIndex = __state;
-                switch (newIndex)
+                return;
+            }
+
+            if (lineIndex is >= 1000 or <= -1000 || precisionWidth) // precision lineIndex
+            {
+                switch (lineIndex)
                 {
                     case <= -1000: // normalize index values, we'll fix them later
-                        newIndex += 1000;
+                        lineIndex += 1000;
                         break;
                     case >= 1000:
-                        newIndex += -1000;
+                        lineIndex += -1000;
                         break;
                     default:
-                        newIndex *= 1000; // convert lineIndex to precision if not already
+                        lineIndex *= 1000; // convert lineIndex to precision if not already
                         break;
                 }
-                newIndex = (newIndex - 2000) * -1 + 2000; //flip lineIndex
 
-                int newWidth = __instance.width; // normalize wall width
-                if (newWidth is < 1000 and > -1000)
+                lineIndex = (lineIndex - 2000) * -1 + 2000; //flip lineIndex
+
+                if (obstacleWidth is < 1000 and > -1000) // normalize wall width
                 {
-                    newWidth *= 1000;
+                    obstacleWidth *= 1000;
                 }
                 else
                 {
-                    if(newWidth >= 1000)
-                        newWidth -= 1000;
-                    if (newWidth <= -1000)
-                        newWidth += 1000;
-                }
-                newIndex -= newWidth;
+                    if (obstacleWidth >= 1000)
+                    {
+                        obstacleWidth -= 1000;
+                    }
 
-                if (newIndex < 0) // this is where we fix them
+                    if (obstacleWidth <= -1000)
+                    {
+                        obstacleWidth += 1000;
+                    }
+                }
+
+                lineIndex -= obstacleWidth;
+
+                if (lineIndex < 0) // this is where we fix them
                 {
-                    newIndex -= 1000;
+                    lineIndex -= 1000;
                 }
                 else
                 {
-                    newIndex += 1000;
+                    lineIndex += 1000;
                 }
-                __instance.lineIndex = newIndex;
+
+                __instance.lineIndex = lineIndex;
             }
-            else // state > -1000 || state < 1000 assumes no precision width
+            else // lineIndex > -1000 || lineIndex < 1000 assumes no precision width
             {
-                int mirrorLane = (__state - 2) * -1 + 2; // flip lineIndex
-                __instance.lineIndex = mirrorLane - __instance.width; // adjust for wall width
+                var mirrorLane = (lineIndex - 2) * -1 + 2; // flip lineIndex
+                __instance.lineIndex = mirrorLane - obstacleWidth; // adjust for wall width
             }
         }
     }
