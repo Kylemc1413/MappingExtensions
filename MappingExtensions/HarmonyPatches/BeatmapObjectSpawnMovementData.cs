@@ -1,4 +1,9 @@
-﻿using HarmonyLib;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
+using SongCore.Utilities;
 using UnityEngine;
 
 namespace MappingExtensions.HarmonyPatches
@@ -50,6 +55,36 @@ namespace MappingExtensions.HarmonyPatches
                 num += noteLineIndex * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000;
                 __result = __instance._rightVec * num + new Vector3(0f, StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer) + StaticBeatmapObjectSpawnMovementData.kObstacleVerticalOffset, 0f);
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetObstacleSpawnData))]
+    internal class BeatmapObjectSpawnMovementDataGetObstacleSpawnDataPatch
+    {
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Replaces the obstacle width.
+            return new CodeMatcher(instructions)
+                .MatchEndForward(
+                    new CodeMatch(i => i.opcode == OpCodes.Callvirt && ((MethodBase)i.operand).Name == $"get_{nameof(ObstacleController.width)}"),
+                    new CodeMatch(OpCodes.Conv_R4),
+                    new CodeMatch())
+                .ThrowIfInvalid()
+                .Insert(Transpilers.EmitDelegate<Func<float, float>>(obstacleWidth =>
+                {
+                    if (!Plugin.active || obstacleWidth is < 1000 and > -1000)
+                    {
+                        return obstacleWidth;
+                    }
+
+                    if (obstacleWidth <= -1000)
+                    {
+                        obstacleWidth += 2000;
+                    }
+
+                    return (obstacleWidth - 1000) / 1000;
+                }))
+                .InstructionEnumeration();
         }
     }
 

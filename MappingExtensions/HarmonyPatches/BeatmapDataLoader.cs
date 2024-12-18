@@ -14,23 +14,6 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.BasicEventConverter), nameof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.BasicEventConverter.SpawnRotationForEventValue))]
-    internal class BeatmapSaveDataBasicEventConverterSpawnRotationForEventValuePatch
-    {
-        private static void Postfix(ref float __result, int index)
-        {
-            if (BS_Utils.Plugin.LevelData.IsSet && !BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.beatmapKey.beatmapCharacteristic.requires360Movement)
-            {
-                return;
-            }
-
-            if (index is >= 1000 and <= 1720)
-            {
-                __result = index - 1360;
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.ObstacleConverter), nameof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.ObstacleConverter.GetHeightForObstacleType))]
     internal class BeatmapDataLoaderObstacleConverterGetHeightForObstacleTypePatch
     {

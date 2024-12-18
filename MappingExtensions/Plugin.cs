@@ -68,8 +68,8 @@ namespace MappingExtensions
             }
 
             var gameplayCoreSceneSetupData = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData;
-            var songData = SongCore.Collections.RetrieveDifficultyData(gameplayCoreSceneSetupData.beatmapLevel, gameplayCoreSceneSetupData.beatmapKey);
-            if (songData != null && songData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
+            var difficultyData = SongCore.Collections.GetCustomLevelSongDifficultyData(gameplayCoreSceneSetupData.beatmapKey);
+            if (difficultyData != null && difficultyData.additionalDifficultyData._requirements.Contains("Mapping Extensions"))
             {
                 active = true;
             }
