@@ -12,8 +12,8 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.BasicEventConverter), nameof(BeatmapDataLoaderVersion2_6_0AndEarlier.BeatmapDataLoader.BasicEventConverter.SpawnRotationForEventValue))]
-    internal class BeatmapSaveDataSpawnRotationForEventValue
+    [HarmonyPatch(typeof(RotationTimeProcessor), nameof(RotationTimeProcessor.SpawnRotationForEventValue))]
+    internal class RotationTimeProcessorSpawnRotationForEventValue
     {
         private static void Postfix(int index, ref float __result)
         {
