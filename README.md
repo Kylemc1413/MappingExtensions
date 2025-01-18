@@ -13,7 +13,7 @@ This adds a host of new things you can do with your maps, currently only possibl
     Walls (Does not support negative layers)
     Chains
     Arcs
-### _360 Degree note Rotation_
+### _360-Degree Note Rotation_
 - You can change the `Cut Direction` of an object to a value between 1000 and 1360 to have the note be rotated from 0-360 degrees clockwise instead of the normal 45 degree deviations the game is limited to, 0 degrees is a down slice , 90 degrees is left slice, 180 up slice,  etc etc.
 ##### Supported By
     Notes
@@ -21,7 +21,7 @@ This adds a host of new things you can do with your maps, currently only possibl
     Bombs
     Chains
     Arcs
-### _Precision Placement_
+### _Precise Placement_
 - You can also choose to place your objects in lanes/layers *between* normal layers, or simply redefine the space your map takes place in.
 
 - If you change the line index to be 1000 or higher or -1000 and lower, you'll be placing the object on a "precise" lane, in that instead of every increase being a single lane, every increase will be 1/1000 of a lane.

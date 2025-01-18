@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -7,8 +7,44 @@ using SongCore.Utilities;
 
 namespace MappingExtensions.HarmonyPatches
 {
+    [HarmonyPatch(typeof(BeatmapDataLoaderVersion3.BeatmapDataLoader.ObstacleConverter), nameof(BeatmapDataLoaderVersion3.BeatmapDataLoader.ObstacleConverter.GetNoteLineLayer))]
+    internal static class BeatmapDataLoaderObstacleConverterGetNoteLineLayerPatch
+    {
+        private static void Postfix(ref NoteLineLayer __result, int lineLayer)
+        {
+            if (lineLayer > 2)
+            {
+                __result = (NoteLineLayer)lineLayer;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(BeatmapTypeConverters), nameof(BeatmapTypeConverters.ConvertNoteLineLayer), typeof(int))]
+    internal static class BeatmapTypeConvertersConvertNoteLineLayerPatch
+    {
+        private static void Postfix(ref NoteLineLayer __result, int layer)
+        {
+            if (layer is > 2 or < 0)
+            {
+                __result = (NoteLineLayer)layer;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(BeatmapTypeConverters), nameof(BeatmapTypeConverters.ConvertNoteLineLayer), typeof(BeatmapSaveDataCommon.NoteLineLayer))]
+    internal static class BeatmapTypeConvertersConvertNoteLineLayerPatch2
+    {
+        private static void Postfix(ref NoteLineLayer __result, BeatmapSaveDataCommon.NoteLineLayer layer)
+        {
+            if ((int)layer is > 2 or < 0)
+            {
+                __result = (NoteLineLayer)layer;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(BeatmapObjectsInTimeRowProcessor), nameof(BeatmapObjectsInTimeRowProcessor.HandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlice))]
-    internal class BeatmapObjectsInTimeRowProcessorHandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlicePatch
+    internal static class BeatmapObjectsInTimeRowProcessorHandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSlicePatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -104,6 +140,23 @@ namespace MappingExtensions.HarmonyPatches
                     }
                 }
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(NoteJump), nameof(NoteJump.Init))]
+    internal static class NoteJumpInitPatch
+    {
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // Prevents an IndexOutOfRangeException when using negative line indexes/layers.
+            return new CodeMatcher(instructions)
+                .MatchStartForward(
+                    new CodeMatch(OpCodes.Ldelem),
+                    new CodeMatch(OpCodes.Ldc_R4),
+                    new CodeMatch(OpCodes.Call))
+                .ThrowIfInvalid()
+                .Insert(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Math), nameof(Math.Abs), new[] { typeof(int) })))
+                .InstructionEnumeration();
         }
     }
 }

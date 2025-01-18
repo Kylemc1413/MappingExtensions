@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
-using SongCore.Utilities;
 using UnityEngine;
 
 namespace MappingExtensions.HarmonyPatches
 {
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetNoteOffset))]
-    internal class BeatmapObjectSpawnMovementDataGetNoteOffsetPatch
+    internal static class BeatmapObjectSpawnMovementDataGetNoteOffsetPatch
     {
         private static void Postfix(BeatmapObjectSpawnMovementData __instance, ref Vector3 __result, int noteLineIndex, NoteLineLayer noteLineLayer)
         {
@@ -34,7 +29,7 @@ namespace MappingExtensions.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetObstacleOffset))]
-    internal class BeatmapObjectSpawnMovementDataGetObstacleOffsetPatch
+    internal static class BeatmapObjectSpawnMovementDataGetObstacleOffsetPatch
     {
         private static void Postfix(BeatmapObjectSpawnMovementData __instance, ref Vector3 __result, int noteLineIndex, NoteLineLayer noteLineLayer)
         {
@@ -58,38 +53,8 @@ namespace MappingExtensions.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.GetObstacleSpawnData))]
-    internal class BeatmapObjectSpawnMovementDataGetObstacleSpawnDataPatch
-    {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            // Replaces the obstacle width.
-            return new CodeMatcher(instructions)
-                .MatchEndForward(
-                    new CodeMatch(i => i.opcode == OpCodes.Callvirt && ((MethodBase)i.operand).Name == $"get_{nameof(ObstacleController.width)}"),
-                    new CodeMatch(OpCodes.Conv_R4),
-                    new CodeMatch())
-                .ThrowIfInvalid()
-                .Insert(Transpilers.EmitDelegate<Func<float, float>>(obstacleWidth =>
-                {
-                    if (!Plugin.active || obstacleWidth is < 1000 and > -1000)
-                    {
-                        return obstacleWidth;
-                    }
-
-                    if (obstacleWidth <= -1000)
-                    {
-                        obstacleWidth += 2000;
-                    }
-
-                    return (obstacleWidth - 1000) / 1000;
-                }))
-                .InstructionEnumeration();
-        }
-    }
-
     [HarmonyPatch(typeof(BeatmapObjectSpawnMovementData), nameof(BeatmapObjectSpawnMovementData.HighestJumpPosYForLineLayer))]
-    internal class BeatmapObjectSpawnMovementDataHighestJumpPosYForLineLayerPatch
+    internal static class BeatmapObjectSpawnMovementDataHighestJumpPosYForLineLayerPatch
     {
         private static void Postfix(BeatmapObjectSpawnMovementData __instance, ref float __result, NoteLineLayer lineLayer)
         {
@@ -107,6 +72,55 @@ namespace MappingExtensions.HarmonyPatches
             else if (layer is > 2 or < 0)
             {
                 __result = __instance._upperLinesHighestJumpPosY - delta + __instance._jumpOffsetYProvider.jumpOffsetY + layer * delta;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(StaticBeatmapObjectSpawnMovementData), nameof(StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer))]
+    internal static class StaticBeatmapObjectSpawnMovementDataLineYPosForLineLayerPatch
+    {
+        private static void Postfix(ref float __result, NoteLineLayer lineLayer)
+        {
+            if (!Plugin.active)
+            {
+                return;
+            }
+
+            const float delta = StaticBeatmapObjectSpawnMovementData.kTopLinesYPos - StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos;
+            var layer = (int)lineLayer;
+            if (layer is >= 1000 or <= -1000)
+            {
+                __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta - delta + layer * delta / 1000;
+            }
+            else if (layer is > 2 or < 0)
+            {
+                __result = StaticBeatmapObjectSpawnMovementData.kUpperLinesYPos - delta + layer * delta;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(StaticBeatmapObjectSpawnMovementData), nameof(StaticBeatmapObjectSpawnMovementData.Get2DNoteOffset))]
+    internal static class StaticBeatmapObjectSpawnMovementDataGet2DNoteOffsetPatch
+    {
+        private static void Postfix(ref Vector2 __result, int noteLineIndex, int noteLinesCount, NoteLineLayer noteLineLayer)
+        {
+            if (!Plugin.active)
+            {
+                return;
+            }
+
+            if (noteLineIndex is >= 1000 or <= -1000)
+            {
+                if (noteLineIndex <= -1000)
+                {
+                    noteLineIndex += 2000;
+                }
+
+                // TODO: Find a better name for this variable.
+                var num = -(noteLinesCount - 1f) * 0.5f;
+                var x = num + noteLineIndex * StaticBeatmapObjectSpawnMovementData.kNoteLinesDistance / 1000;
+                var y = StaticBeatmapObjectSpawnMovementData.LineYPosForLineLayer(noteLineLayer);
+                __result = new Vector2(x, y);
             }
         }
     }
